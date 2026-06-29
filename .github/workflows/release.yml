@@ -1,0 +1,52 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  GODOT_VERSION: "4.7"
+  EXPORT_NAME: "hardreset"
+
+jobs:
+  export-windows:
+    name: Export Windows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Godot Editor
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q "Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          echo "GODOT_BIN=$(pwd)/Godot_v${GODOT_VERSION}-stable_linux.x86_64" >> "$GITHUB_ENV"
+
+      - name: Download and Install Export Templates
+        run: |
+          mkdir -p "$HOME/.local/share/godot/export_templates"
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q "Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -d "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+
+      - name: Import Project Resources
+        run: |
+          ${{ env.GODOT_BIN }} --headless --import
+
+      - name: Export Windows Desktop
+        run: |
+          mkdir -p build
+          ${{ env.GODOT_BIN }} --headless --export-release "Windows Desktop" "build/${EXPORT_NAME}.exe"
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.EXPORT_NAME }}-windows
+          path: build/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/**
+          generate_release_notes: true
+          name: Hard Reset ${{ github.ref_name }}
