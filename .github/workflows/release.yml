@@ -1,4 +1,4 @@
-name: Build and Release
+name: Build & Release
 
 on:
   push:
@@ -6,62 +6,97 @@ on:
       - 'v*'
 
 env:
+  EXPORT_NAME: hardreset
   GODOT_VERSION: "4.7"
-  EXPORT_NAME: "hardreset"
 
 jobs:
-  export-windows:
-    name: Export Windows
-    runs-on: windows-latest
+  build:
+    name: Windows Build
+    runs-on: [self-hosted, windows]
     permissions:
       contents: write
     defaults:
       run:
         shell: powershell
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
 
-      - name: Download Godot Editor
+      - name: Find Godot binary
         run: |
-          $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_win64.exe.zip"
-          Write-Output "Downloading Godot editor..."
-          Invoke-WebRequest -Uri $url -OutFile "godot_editor.zip"
-          Expand-Archive -Path "godot_editor.zip" -DestinationPath "." -Force
-          $godotBin = (Get-ChildItem ".\Godot_v*.exe" | Where-Object { $_.Name -notlike "*console*" } | Select-Object -First 1).FullName
-          Add-Content -Path $env:GITHUB_ENV -Value "GODOT_BIN=$godotBin"
-          Write-Output "Godot editor: $godotBin"
+          # Priority: GODOT_BIN env var > common install locations
+          if (Test-Path "$env:GODOT_BIN") {
+            "GODOT_BIN=$env:GODOT_BIN" | Out-File -FilePath $env:GITHUB_ENV -Append
+            Write-Output "Using Godot from env GODOT_BIN: $env:GODOT_BIN"
+          } else {
+            $paths = @(
+              "$HOME\Downloads\Godot_v${env:GODOT_VERSION}-stable_win64.exe",
+              "$HOME\Downloads\Godot_v${env:GODOT_VERSION}-stable_win64_console.exe",
+              "${env:LOCALAPPDATA}\Godot\godot.exe",
+              "C:\Program Files\Godot\godot.exe",
+              "C:\Godot\godot.exe"
+            )
+            $found = $false
+            foreach ($p in $paths) {
+              if (Test-Path $p) {
+                "GODOT_BIN=$p" | Out-File -FilePath $env:GITHUB_ENV -Append
+                Write-Output "Found Godot: $p"
+                $found = $true
+                break
+              }
+            }
+            if (-not $found) {
+              throw @"
+Godot not found! Either:
+1. Set GODOT_BIN system env var: [System.Environment]::SetEnvironmentVariable('GODOT_BIN','C:\path\to\Godot.exe','Machine')
+2. Or put Godot in Downloads folder
+3. Or install to C:\Program Files\Godot\
+"@
+            }
+          }
 
-      - name: Download and Install Export Templates
+      - name: Ensure Export Templates installed
         run: |
-          $templatesDir = "$env:APPDATA\Godot\export_templates"
-          New-Item -ItemType Directory -Path $templatesDir -Force | Out-Null
-          $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_export_templates.tpz"
-          Write-Output "Downloading export templates..."
-          Invoke-WebRequest -Uri $url -OutFile "templates.zip"
-          Expand-Archive -Path "templates.zip" -DestinationPath "$templatesDir\tmp" -Force
-          Move-Item -Path "$templatesDir\tmp\templates" -Destination "$templatesDir\$env:GODOT_VERSION.stable" -Force
-          Remove-Item -Path "$templatesDir\tmp" -Recurse -Force -ErrorAction SilentlyContinue
-          Write-Output "Templates installed to $templatesDir\$env:GODOT_VERSION.stable"
+          $ver = "${env:GODOT_VERSION}.stable"
+          $templateDir = "$env:APPDATA\Godot\export_templates\$ver"
+          $checkFile = "$templateDir\windows_x86_64_release.exe"
 
-      - name: Import Project Resources
-        run: |
-          & $env:GODOT_BIN --headless --import
-          if ($LASTEXITCODE -ne 0) { throw "Import failed with exit code $LASTEXITCODE" }
+          if (-not (Test-Path $checkFile)) {
+            Write-Output "Export Templates not found. Downloading..."
+            New-Item -ItemType Directory -Path $templateDir -Force | Out-Null
+            $url = "https://github.com/godotengine/godot/releases/download/${env:GODOT_VERSION}-stable/Godot_v${env:GODOT_VERSION}-stable_export_templates.tpz"
+            $tmp = "$env:TEMP\godot_templates"
+            New-Item -ItemType Directory -Path $tmp -Force | Out-Null
+            Invoke-WebRequest -Uri $url -OutFile "$tmp\templates.tpz"
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            [System.IO.Compression.ZipFile]::ExtractToDirectory("$tmp\templates.tpz", "$tmp\extracted")
+            Copy-Item -Path "$tmp\extracted\templates\*" -Destination $templateDir -Recurse -Force
+            Remove-Item -Path $tmp -Recurse -Force
+            Write-Output "Templates installed to $templateDir"
+          } else {
+            Write-Output "Export Templates already installed at $templateDir"
+          }
 
       - name: Export Windows Desktop
         run: |
           New-Item -ItemType Directory -Path "build" -Force | Out-Null
-          & $env:GODOT_BIN --headless --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe"
-          if ($LASTEXITCODE -ne 0) { throw "Export failed with exit code $LASTEXITCODE" }
-          Write-Output "Build directory contents:"
-          Get-ChildItem -Path "build\"
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.EXPORT_NAME }}-windows
-          path: build/
+          $bin = $env:GODOT_BIN
+          Write-Output "Running: $bin --headless --export-release Windows Desktop build\$env:EXPORT_NAME.exe"
+          & $bin --headless --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe" 2>&1
+          $exitCode = $LASTEXITCODE
+          if ($exitCode -ne 0) {
+            Write-Output "Export failed with exit code $exitCode"
+            Write-Output "Retrying without --headless..."
+            & $bin --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe" 2>&1
+            if ($LASTEXITCODE -ne 0) {
+              throw "Export failed with exit code $LASTEXITCODE"
+            }
+          }
+          $file = Get-Item "build\$env:EXPORT_NAME.exe"
+          Write-Output "Build complete: $($file.FullName) ($([math]::Round($file.Length/1MB, 2)) MB)"
+          Get-ChildItem -Path "build\" | ForEach-Object { Write-Output "  $($_.Name) - $([math]::Round($_.Length/1MB, 2)) MB" }
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
