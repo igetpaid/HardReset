@@ -21,7 +21,7 @@ auto_backup/_internal_count_storage=477
 config/name="Hard Reset"
 run/main_scene="uid://cfwtflqp7cs8y"
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://icon.png"
 
 [autoload]
 
