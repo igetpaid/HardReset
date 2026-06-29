@@ -28,7 +28,7 @@ jobs:
           Write-Output "Downloading Godot editor..."
           Invoke-WebRequest -Uri $url -OutFile "godot_editor.zip"
           Expand-Archive -Path "godot_editor.zip" -DestinationPath "." -Force
-          $godotBin = (Resolve-Path ".\Godot_v*.exe").Path
+          $godotBin = (Get-ChildItem ".\Godot_v*.exe" | Where-Object { $_.Name -notlike "*console*" } | Select-Object -First 1).FullName
           Add-Content -Path $env:GITHUB_ENV -Value "GODOT_BIN=$godotBin"
           Write-Output "Godot editor: $godotBin"
 
