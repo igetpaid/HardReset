@@ -3,6 +3,7 @@
 export_credentials.cfg
 *.translation
 *.backup
+addons/
 
 # Личные файлы проекта (идеи, планы, заметки)
 .opencode/
