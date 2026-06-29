@@ -27,7 +27,9 @@ jobs:
         run: |
           mkdir -p "$HOME/.local/share/godot/export_templates"
           wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
-          unzip -q "Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -d "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          unzip -q "Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -d "$HOME/.local/share/godot/export_templates/tmp"
+          mv "$HOME/.local/share/godot/export_templates/tmp/templates" "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          rm -rf "$HOME/.local/share/godot/export_templates/tmp"
 
       - name: Import Project Resources
         run: |
