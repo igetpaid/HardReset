@@ -12,52 +12,50 @@ env:
 jobs:
   export-windows:
     name: Export Windows
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       contents: write
+    defaults:
+      run:
+        shell: powershell
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Download Godot Editor
         run: |
-          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
-          unzip -q "Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
-          echo "GODOT_BIN=$(pwd)/Godot_v${GODOT_VERSION}-stable_linux.x86_64" >> "$GITHUB_ENV"
+          $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_win64.exe.zip"
+          Write-Output "Downloading Godot editor..."
+          Invoke-WebRequest -Uri $url -OutFile "godot_editor.zip"
+          Expand-Archive -Path "godot_editor.zip" -DestinationPath "." -Force
+          $godotBin = (Resolve-Path ".\Godot_v*.exe").Path
+          Add-Content -Path $env:GITHUB_ENV -Value "GODOT_BIN=$godotBin"
+          Write-Output "Godot editor: $godotBin"
 
       - name: Download and Install Export Templates
         run: |
-          mkdir -p "$HOME/.local/share/godot/export_templates"
-          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
-          unzip -q "Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -d "$HOME/.local/share/godot/export_templates/tmp"
-          mv "$HOME/.local/share/godot/export_templates/tmp/templates" "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
-          rm -rf "$HOME/.local/share/godot/export_templates/tmp"
+          $templatesDir = "$env:APPDATA\Godot\export_templates"
+          New-Item -ItemType Directory -Path $templatesDir -Force | Out-Null
+          $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_export_templates.tpz"
+          Write-Output "Downloading export templates..."
+          Invoke-WebRequest -Uri $url -OutFile "templates.zip"
+          Expand-Archive -Path "templates.zip" -DestinationPath "$templatesDir\tmp" -Force
+          Move-Item -Path "$templatesDir\tmp\templates" -Destination "$templatesDir\$env:GODOT_VERSION.stable" -Force
+          Remove-Item -Path "$templatesDir\tmp" -Recurse -Force -ErrorAction SilentlyContinue
+          Write-Output "Templates installed to $templatesDir\$env:GODOT_VERSION.stable"
 
       - name: Import Project Resources
         run: |
-          ${{ env.GODOT_BIN }} --headless --import
+          & $env:GODOT_BIN --headless --import
+          if ($LASTEXITCODE -ne 0) { throw "Import failed with exit code $LASTEXITCODE" }
 
       - name: Export Windows Desktop
         run: |
-          mkdir -p build
-          ${{ env.GODOT_BIN }} --headless --export-release "Windows Desktop" "build/${EXPORT_NAME}.exe"
-          echo "Export done. Build dir contents:"
-          ls -la build/
-
-      - name: Embed PCK into Executable
-        run: |
-          if [ -f "build/${EXPORT_NAME}.pck" ]; then
-            BEFORE=$(stat -c%s "build/${EXPORT_NAME}.exe")
-            PCK_SIZE=$(stat -c%s "build/${EXPORT_NAME}.pck")
-            cat "build/${EXPORT_NAME}.pck" >> "build/${EXPORT_NAME}.exe"
-            rm "build/${EXPORT_NAME}.pck"
-            AFTER=$(stat -c%s "build/${EXPORT_NAME}.exe")
-            echo "PCK embedded: ${BEFORE} + ${PCK_SIZE} = ${AFTER} bytes"
-            echo "Result: single file build/${EXPORT_NAME}.exe"
-          else
-            echo "No .pck file found — embedding may have already been done by Godot"
-            ls -la build/
-          fi
+          New-Item -ItemType Directory -Path "build" -Force | Out-Null
+          & $env:GODOT_BIN --headless --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe"
+          if ($LASTEXITCODE -ne 0) { throw "Export failed with exit code $LASTEXITCODE" }
+          Write-Output "Build directory contents:"
+          Get-ChildItem -Path "build\"
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4

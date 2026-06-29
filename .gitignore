@@ -8,6 +8,9 @@ addons/
 # Личные файлы проекта (идеи, планы, заметки)
 .opencode/
 
+# Тестовые сборки
+Local_Test/
+
 # OS
 Thumbs.db
 .DS_Store
