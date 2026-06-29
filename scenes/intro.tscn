@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://c6uwsqhqdut04"]
+
+[ext_resource type="Script" uid="uid://bi1pa2v8g05sb" path="res://scenes/intro.gd" id="1_ioskq"]
+[ext_resource type="Texture2D" uid="uid://58m6vqfu8005" path="res://resources/round_skip2.png" id="2_i2l1n"]
+[ext_resource type="VideoStream" uid="uid://dglx7bfh74v1m" path="res://resources/Timeline1.ogv" id="2_wfs7u"]
+[ext_resource type="Texture2D" uid="uid://b30ontthvdi5e" path="res://resources/round_skip.png" id="3_wfs7u"]
+[ext_resource type="FontFile" uid="uid://deekk24grivc1" path="res://fonts/minecraft.ttf" id="4_es01l"]
+
+[node name="Intro" type="Control" unique_id=1904686223]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ioskq")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=448424786]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+stream = ExtResource("2_wfs7u")
+expand = true
+
+[node name="SkipProgressBar" type="TextureProgressBar" parent="." unique_id=1686765428]
+layout_mode = 0
+offset_left = 1847.0
+offset_top = 17.0
+offset_right = 1929.0
+offset_bottom = 99.0
+scale = Vector2(0.7, 0.7)
+value = 30.0
+fill_mode = 4
+texture_under = ExtResource("2_i2l1n")
+texture_progress = ExtResource("3_wfs7u")
+
+[node name="SkipHintLabel" type="Label" parent="." unique_id=318011797]
+layout_mode = 0
+offset_left = 998.0
+offset_top = 29.0
+offset_right = 1818.0
+offset_bottom = 60.0
+theme_override_fonts/font = ExtResource("4_es01l")
+theme_override_font_sizes/font_size = 30
+text = "Для пропуска заставки удерживайте Space"

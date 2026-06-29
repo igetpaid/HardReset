@@ -1,0 +1,12 @@
+# Godot
+.godot/
+export_credentials.cfg
+*.translation
+*.backup
+
+# Личные файлы проекта (идеи, планы, заметки)
+.opencode/
+
+# OS
+Thumbs.db
+.DS_Store

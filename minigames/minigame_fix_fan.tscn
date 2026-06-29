@@ -1,0 +1,544 @@
+[gd_scene format=3 uid="uid://fq7pg8137rri"]
+
+[ext_resource type="Script" uid="uid://dmtwbj0nm4r0p" path="res://minigames/minigame_fix_fan.gd" id="1_0rgsu"]
+[ext_resource type="Texture2D" uid="uid://b3171faxpvyfl" path="res://resources/minigames/background.png" id="2_grefp"]
+[ext_resource type="Texture2D" uid="uid://bpdwbi1yjhr36" path="res://resources/minigames/gaming_broken_fan.png" id="3_yqbt0"]
+[ext_resource type="Texture2D" uid="uid://cceepsnfd30di" path="res://resources/minigames/trash_bin.png" id="4_fpby3"]
+[ext_resource type="Texture2D" uid="uid://3mkt1vjey7p7" path="res://resources/minigames/gaming_fixed_fan.png" id="4_kr6s8"]
+[ext_resource type="AudioStream" uid="uid://d1ogylkg8f1q8" path="res://audio/sfx/screwdriver.wav" id="4_y8akr"]
+[ext_resource type="AudioStream" uid="uid://c523vkda6qfle" path="res://audio/sfx/trash_sound.wav" id="5_tdc7o"]
+[ext_resource type="Texture2D" uid="uid://c508cmp312wa4" path="res://resources/minigames/screwdriver_button.png" id="6_yqbt0"]
+[ext_resource type="Texture2D" uid="uid://ds6imi2x1ojui" path="res://resources/minigames/electric_screwdriver_button.png" id="7_kr6s8"]
+[ext_resource type="AudioStream" uid="uid://bll7iysbkfkyd" path="res://audio/sfx/conveyor.wav" id="7_wgb1q"]
+[ext_resource type="AudioStream" uid="uid://cs8fmsi70cuar" path="res://audio/sfx/pop.mp3" id="11_yqbt0"]
+
+[sub_resource type="Animation" id="Animation_tdc7o"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt0:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.5707964]
+}
+
+[sub_resource type="Animation" id="Animation_oihsa"]
+resource_name = "bolt_reverse_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt0:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.712389, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_y8akr"]
+resource_name = "bolt_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt0:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -3.1415927]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tdc7o"]
+_data = {
+&"RESET": SubResource("Animation_tdc7o"),
+&"bolt_reverse_turn": SubResource("Animation_oihsa"),
+&"bolt_turn": SubResource("Animation_y8akr")
+}
+
+[sub_resource type="Animation" id="Animation_fpby3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt1:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-4.712389]
+}
+
+[sub_resource type="Animation" id="Animation_neny7"]
+resource_name = "bolt_reverse_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt1:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.712389, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_wgb1q"]
+resource_name = "bolt_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt1:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -4.712389]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5qno3"]
+_data = {
+&"RESET": SubResource("Animation_fpby3"),
+&"bolt_reverse_turn": SubResource("Animation_neny7"),
+&"bolt_turn": SubResource("Animation_wgb1q")
+}
+
+[sub_resource type="Animation" id="Animation_r2u6e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt2:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-4.712389]
+}
+
+[sub_resource type="Animation" id="Animation_wuhy5"]
+resource_name = "bolt_reverse_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt2:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.712389, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_wk0nm"]
+resource_name = "bolt_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt2:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -4.712389]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yqbt0"]
+_data = {
+&"RESET": SubResource("Animation_r2u6e"),
+&"bolt_reverse_turn": SubResource("Animation_wuhy5"),
+&"bolt_turn": SubResource("Animation_wk0nm")
+}
+
+[sub_resource type="Animation" id="Animation_kr6s8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt3:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-4.712389]
+}
+
+[sub_resource type="Animation" id="Animation_dpvkk"]
+resource_name = "bolt_reverse_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt3:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-4.712389, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_bjnce"]
+resource_name = "bolt_turn"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/Bolts/Bolt3:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -4.712389]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_57dkk"]
+_data = {
+&"RESET": SubResource("Animation_kr6s8"),
+&"bolt_reverse_turn": SubResource("Animation_dpvkk"),
+&"bolt_turn": SubResource("Animation_bjnce")
+}
+
+[sub_resource type="Animation" id="Animation_5qno3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/TrashBin:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(191, 670)]
+}
+
+[sub_resource type="Animation" id="Animation_yqbt0"]
+resource_name = "trash_appear"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/TrashBin:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(191, 1085), Vector2(191, 670)]
+}
+
+[sub_resource type="Animation" id="Animation_57dkk"]
+resource_name = "trash_disappear"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/TrashBin:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.2, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(191, 670), Vector2(191, 1085)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kr6s8"]
+_data = {
+&"RESET": SubResource("Animation_5qno3"),
+&"trash_appear": SubResource("Animation_yqbt0"),
+&"trash_disappear": SubResource("Animation_57dkk")
+}
+
+[sub_resource type="Animation" id="Animation_rrw5y"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/FixedFan:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1495, 350)]
+}
+
+[sub_resource type="Animation" id="Animation_dd0ym"]
+resource_name = "fan_appear"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AbsoluteSpace/FixedFan:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1923, 350), Vector2(1490, 350)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_oihsa"]
+_data = {
+&"RESET": SubResource("Animation_rrw5y"),
+&"fan_appear": SubResource("Animation_dd0ym")
+}
+
+[sub_resource type="Animation" id="Animation_l5xry"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 0.01)]
+}
+
+[sub_resource type="Animation" id="Animation_qft54"]
+resource_name = "minigame_close"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.7, 0.9, 1),
+"transitions": PackedFloat32Array(0.55478466, 0.3922921, 0.46651652, 0.6830201, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1, 1.15), Vector2(1, 0.01), Vector2(0.01, 0.01), Vector2(1e-05, 1e-05)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_j4s5w"]
+_data = {
+&"RESET": SubResource("Animation_l5xry"),
+&"minigame_close": SubResource("Animation_qft54")
+}
+
+[node name="MinigameFixFan" type="Control" unique_id=1339738154]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -605.0
+offset_top = -405.0
+offset_right = 605.0
+offset_bottom = 405.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.01)
+pivot_offset = Vector2(605, 405)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_0rgsu")
+metadata/_edit_use_anchors_ = true
+
+[node name="Background" type="TextureRect" parent="." unique_id=591533663]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -605.0
+offset_top = -405.0
+offset_right = 605.0
+offset_bottom = 405.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_grefp")
+
+[node name="BrokenFan" type="TextureRect" parent="." unique_id=791553018]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_yqbt0")
+
+[node name="AbsoluteSpace" type="Control" parent="." unique_id=1469500029]
+layout_mode = 1
+anchor_left = -0.293
+anchor_top = -0.16700001
+anchor_right = -0.293
+anchor_bottom = -0.16700001
+offset_left = -0.4699707
+offset_top = 0.27000427
+offset_right = -0.4699707
+offset_bottom = 0.27000427
+
+[node name="FixedFan" type="TextureRect" parent="AbsoluteSpace" unique_id=386805956]
+layout_mode = 0
+offset_left = 1495.0
+offset_top = 350.0
+offset_right = 2197.0
+offset_bottom = 1052.0
+texture = ExtResource("4_kr6s8")
+
+[node name="GlowRings" type="Control" parent="AbsoluteSpace" unique_id=379295941]
+anchors_preset = 0
+offset_left = -52.0
+offset_top = -52.0
+offset_right = -52.0
+offset_bottom = -52.0
+
+[node name="GlowRing0" type="TextureRect" parent="AbsoluteSpace/GlowRings" unique_id=343022976]
+layout_mode = 0
+offset_left = 650.0
+offset_top = 230.0
+offset_right = 754.0
+offset_bottom = 334.0
+
+[node name="GlowRing1" type="TextureRect" parent="AbsoluteSpace/GlowRings" unique_id=1023617485]
+layout_mode = 0
+offset_left = 1271.0
+offset_top = 230.0
+offset_right = 1311.0
+offset_bottom = 270.0
+
+[node name="GlowRing2" type="TextureRect" parent="AbsoluteSpace/GlowRings" unique_id=1583838187]
+layout_mode = 0
+offset_left = 650.0
+offset_top = 849.0
+offset_right = 690.0
+offset_bottom = 889.0
+
+[node name="GlowRing3" type="TextureRect" parent="AbsoluteSpace/GlowRings" unique_id=881826413]
+layout_mode = 0
+offset_left = 1270.0
+offset_top = 849.0
+offset_right = 1310.0
+offset_bottom = 889.0
+
+[node name="Bolts" type="Control" parent="AbsoluteSpace" unique_id=1594646296]
+anchors_preset = 0
+
+[node name="Bolt0" type="TextureButton" parent="AbsoluteSpace/Bolts" unique_id=1653230118]
+layout_mode = 0
+offset_left = 619.0
+offset_top = 199.0
+offset_right = 681.0
+offset_bottom = 261.0
+rotation = 1.5707964
+pivot_offset = Vector2(31, 31)
+
+[node name="Bolt1" type="TextureButton" parent="AbsoluteSpace/Bolts" unique_id=1176640901]
+layout_mode = 0
+offset_left = 1240.0
+offset_top = 199.0
+offset_right = 1302.0
+offset_bottom = 261.0
+rotation = -4.712389
+pivot_offset = Vector2(31, 31)
+
+[node name="Bolt2" type="TextureButton" parent="AbsoluteSpace/Bolts" unique_id=228933069]
+layout_mode = 0
+offset_left = 619.0
+offset_top = 818.0
+offset_right = 681.0
+offset_bottom = 880.0
+rotation = -4.712389
+pivot_offset = Vector2(31, 31)
+
+[node name="Bolt3" type="TextureButton" parent="AbsoluteSpace/Bolts" unique_id=817501934]
+layout_mode = 0
+offset_left = 1239.0
+offset_top = 818.0
+offset_right = 1301.0
+offset_bottom = 880.0
+rotation = -4.712389
+pivot_offset = Vector2(31, 31)
+
+[node name="TrashBin" type="TextureRect" parent="AbsoluteSpace" unique_id=31768720]
+layout_mode = 0
+offset_left = 191.0
+offset_top = 670.0
+offset_right = 531.0
+offset_bottom = 1059.9998
+pivot_offset = Vector2(170, 195)
+texture = ExtResource("4_fpby3")
+
+[node name="ScrewdriverButton" type="TextureButton" parent="AbsoluteSpace" unique_id=1007558848]
+layout_mode = 0
+offset_left = 1416.0
+offset_top = 560.0
+offset_right = 1830.0
+offset_bottom = 974.0
+texture_normal = ExtResource("6_yqbt0")
+
+[node name="ElectricScrewdriverButton" type="TextureButton" parent="AbsoluteSpace" unique_id=2136878139]
+layout_mode = 0
+offset_left = 1416.0
+offset_top = 112.0
+offset_right = 1830.0
+offset_bottom = 526.0
+texture_normal = ExtResource("7_kr6s8")
+
+[node name="Timer" type="Timer" parent="." unique_id=949228416]
+
+[node name="ScrewdriverSound" type="AudioStreamPlayer" parent="." unique_id=1707618937]
+stream = ExtResource("4_y8akr")
+
+[node name="TrashSound" type="AudioStreamPlayer" parent="." unique_id=790166586]
+stream = ExtResource("5_tdc7o")
+
+[node name="ConveyorSound" type="AudioStreamPlayer" parent="." unique_id=757701886]
+stream = ExtResource("7_wgb1q")
+
+[node name="ButtonClickSound" type="AudioStreamPlayer" parent="." unique_id=1020589959]
+stream = ExtResource("11_yqbt0")
+
+[node name="BoltAnimator0" type="AnimationPlayer" parent="." unique_id=1523602851]
+libraries/ = SubResource("AnimationLibrary_tdc7o")
+
+[node name="BoltAnimator1" type="AnimationPlayer" parent="." unique_id=1278425610]
+libraries/ = SubResource("AnimationLibrary_5qno3")
+
+[node name="BoltAnimator2" type="AnimationPlayer" parent="." unique_id=2105996284]
+libraries/ = SubResource("AnimationLibrary_yqbt0")
+
+[node name="BoltAnimator3" type="AnimationPlayer" parent="." unique_id=1041655376]
+libraries/ = SubResource("AnimationLibrary_57dkk")
+
+[node name="TrashAnimator" type="AnimationPlayer" parent="." unique_id=1553494848]
+libraries/ = SubResource("AnimationLibrary_kr6s8")
+
+[node name="FixedFanAnimator" type="AnimationPlayer" parent="." unique_id=708830240]
+libraries/ = SubResource("AnimationLibrary_oihsa")
+
+[node name="MinigameClose" type="AnimationPlayer" parent="." unique_id=1764296109]
+libraries/ = SubResource("AnimationLibrary_j4s5w")

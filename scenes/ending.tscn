@@ -1,0 +1,156 @@
+[gd_scene format=3 uid="uid://bpeajq8ycocrp"]
+
+[ext_resource type="Script" uid="uid://ul2sta43ofjy" path="res://scenes/ending.gd" id="1_mqjok"]
+[ext_resource type="VideoStream" uid="uid://b22ce4tw5xf43" path="res://resources/1 entering.ogv" id="2_nfmnx"]
+[ext_resource type="VideoStream" uid="uid://c3t5i0kr51yhj" path="res://resources/2 good.ogv" id="3_qa3ag"]
+[ext_resource type="VideoStream" uid="uid://cvq28d5q4jd58" path="res://resources/2 bad.ogv" id="4_5amew"]
+[ext_resource type="VideoStream" uid="uid://cn1u7oy0ciplr" path="res://resources/4 bad.ogv" id="6_3v48n"]
+[ext_resource type="VideoStream" uid="uid://dbxd5ubh4f2i0" path="res://resources/4 good.ogv" id="7_75aq2"]
+[ext_resource type="VideoStream" uid="uid://bpd4fj4we2d8f" path="res://resources/3 smooth run.ogv" id="8_o5uye"]
+[ext_resource type="FontFile" uid="uid://deekk24grivc1" path="res://fonts/minecraft.ttf" id="9_jh3k8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_qte_panel"]
+resource_local_to_scene = true
+bg_color = Color(0, 0, 0, 0.7921569)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.55, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_bottom_box"]
+resource_local_to_scene = true
+bg_color = Color(0.1, 0.1, 0.12, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="Ending" type="Control" unique_id=1670841321]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mqjok")
+
+[node name="Video1" type="VideoStreamPlayer" parent="." unique_id=212271765]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+stream = ExtResource("2_nfmnx")
+
+[node name="Video2Good" type="VideoStreamPlayer" parent="." unique_id=1090755902]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+stream = ExtResource("3_qa3ag")
+
+[node name="Video2Bad" type="VideoStreamPlayer" parent="." unique_id=1722335584]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+stream = ExtResource("4_5amew")
+
+[node name="Video3" type="VideoStreamPlayer" parent="." unique_id=611700829]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+stream = ExtResource("8_o5uye")
+
+[node name="Video4Good" type="VideoStreamPlayer" parent="." unique_id=2143170037]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+stream = ExtResource("7_75aq2")
+
+[node name="Video4Bad" type="VideoStreamPlayer" parent="." unique_id=2060987963]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+stream = ExtResource("6_3v48n")
+
+[node name="QtePanel" type="Panel" parent="." unique_id=121837520]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -520.0
+offset_top = -280.0
+offset_right = 520.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBox_qte_panel")
+
+[node name="AttentionLabel" type="Label" parent="QtePanel" unique_id=1152975296]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 15.0
+offset_right = 720.0
+offset_bottom = 65.00001
+theme_override_colors/font_color = Color(1, 0.9, 0, 1)
+theme_override_fonts/font = ExtResource("9_jh3k8")
+theme_override_font_sizes/font_size = 42
+text = "ВНИМАНИЕ!"
+horizontal_alignment = 1
+
+[node name="InstructionLabel" type="Label" parent="QtePanel" unique_id=1788610934]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 155.0
+offset_right = 1025.0
+offset_bottom = 295.00006
+theme_override_fonts/font = ExtResource("9_jh3k8")
+theme_override_font_sizes/font_size = 31
+text = "Противник вот-вот окажется в вашем прицеле
+
+Как только увидете его, нажимайте ЛКМ"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
+
+[node name="ReactionLabel" type="Label" parent="QtePanel" unique_id=538825227]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 380.0
+offset_right = 740.0
+offset_bottom = 420.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.3, 1)
+theme_override_fonts/font = ExtResource("9_jh3k8")
+theme_override_font_sizes/font_size = 26
+text = "Это задача на реакцию!"
+horizontal_alignment = 1
+
+[node name="BottomBox" type="Panel" parent="QtePanel" unique_id=948660083]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 450.0
+offset_right = 980.0
+offset_bottom = 530.0
+theme_override_styles/panel = SubResource("StyleBox_bottom_box")
+
+[node name="ContinueLabel" type="Label" parent="QtePanel/BottomBox" unique_id=1986918362]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.65, 0.65, 0.65, 1)
+theme_override_fonts/font = ExtResource("9_jh3k8")
+theme_override_font_sizes/font_size = 22
+text = "Нажмите ЛКМ для продолжения"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClickCatcher" type="Control" parent="." unique_id=1634254842]
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0

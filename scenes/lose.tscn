@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://vk4wp7m47ftx"]
+
+[ext_resource type="Script" uid="uid://bpe67mlpc12v6" path="res://scenes/lose.gd" id="1_10rtl"]
+[ext_resource type="Texture2D" uid="uid://curyk8m6enp3j" path="res://resources/yes_button.png" id="1_vjdtf"]
+[ext_resource type="VideoStream" uid="uid://bfqiqlq45hkkf" path="res://resources/keybord.ogv" id="3_h0cgr"]
+
+[node name="Lose" type="Control" unique_id=71535530]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_10rtl")
+
+[node name="Button" type="TextureButton" parent="." unique_id=560673790]
+layout_mode = 0
+offset_left = 907.00006
+offset_top = 906.0
+offset_right = 1120.0
+offset_bottom = 1118.0
+scale = Vector2(0.665, 0.665)
+texture_normal = ExtResource("1_vjdtf")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=805121119]
+layout_mode = 0
+offset_left = 370.0
+offset_top = 168.0
+offset_right = 1010.0
+offset_bottom = 542.0
+scale = Vector2(1.9, 1.9)
+stream = ExtResource("3_h0cgr")
+autoplay = true
+loop = true
+
+[node name="Label" type="Label" parent="." unique_id=1652868198]
+layout_mode = 0
+offset_left = 441.0
+offset_top = 34.0
+offset_right = 1495.0
+offset_bottom = 133.0
+theme_override_font_sizes/font_size = 72
+text = "Надо больше тренироваться"

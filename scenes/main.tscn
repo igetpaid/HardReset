@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://cfwtflqp7cs8y"]
+
+[ext_resource type="Script" uid="uid://v4e85s12uwd5" path="res://scenes/main.gd" id="1_o5qli"]
+[ext_resource type="Texture2D" uid="uid://h8l84sdmhy7l" path="res://resources/main_background.png" id="2_jyhfs"]
+[ext_resource type="Texture2D" uid="uid://curyk8m6enp3j" path="res://resources/yes_button.png" id="2_sugp2"]
+[ext_resource type="Texture2D" uid="uid://dcyc13733tq74" path="res://resources/main_start.png" id="3_choun"]
+[ext_resource type="Texture2D" uid="uid://dgl8uo0cn1wh5" path="res://resources/no_button.png" id="3_jyhfs"]
+[ext_resource type="Texture2D" uid="uid://rc86cltsyef4" path="res://resources/main_start_hover.png" id="4_ya4ey"]
+[ext_resource type="Texture2D" uid="uid://hy3uhcqndamr" path="res://resources/main_stats.png" id="5_eb6dy"]
+[ext_resource type="Texture2D" uid="uid://cmrtlrsi05738" path="res://resources/main_stats_hover.png" id="6_trceg"]
+[ext_resource type="Texture2D" uid="uid://bhwokwiuifkk8" path="res://resources/main_exit.png" id="7_a8y0u"]
+[ext_resource type="Texture2D" uid="uid://d1cacu77o21h2" path="res://resources/main_exit_hover.png" id="8_jkv2x"]
+
+[node name="Control" type="Control" unique_id=2072566836]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o5qli")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1932464718]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("2_jyhfs")
+
+[node name="Label" type="Label" parent="." unique_id=43175693]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.1
+anchor_right = 0.5
+anchor_bottom = 0.105
+offset_left = -429.5
+offset_right = 429.5
+offset_bottom = 235.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 172
+text = "PC Builder"
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayButton" type="TextureButton" parent="." unique_id=358513619]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.44895834
+anchor_top = 0.5675926
+anchor_right = 0.44895834
+anchor_bottom = 0.5675926
+offset_right = 203.0
+offset_bottom = 49.0
+texture_normal = ExtResource("3_choun")
+texture_hover = ExtResource("4_ya4ey")
+metadata/_edit_use_anchors_ = true
+
+[node name="StatsButton" type="TextureButton" parent="." unique_id=2130208678]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4640625
+anchor_top = 0.6259259
+anchor_right = 0.4640625
+anchor_bottom = 0.6259259
+offset_right = 124.0
+offset_bottom = 53.0
+texture_normal = ExtResource("5_eb6dy")
+texture_hover = ExtResource("6_trceg")
+metadata/_edit_use_anchors_ = true
+
+[node name="ExitButton" type="TextureButton" parent="." unique_id=483422174]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.47604167
+anchor_top = 0.68796295
+anchor_right = 0.47604167
+anchor_bottom = 0.68796295
+offset_right = 91.0
+offset_bottom = 48.0
+texture_normal = ExtResource("7_a8y0u")
+texture_hover = ExtResource("8_jkv2x")
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=605517711]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LoadDialog" type="Panel" parent="." unique_id=915609449]
+layout_mode = 0
+offset_left = 751.0
+offset_top = 381.0
+offset_right = 1170.0
+offset_bottom = 552.0
+
+[node name="YesButton" type="TextureButton" parent="LoadDialog" unique_id=1214891957]
+layout_mode = 0
+offset_left = 75.0
+offset_top = 88.0
+offset_right = 288.0
+offset_bottom = 300.0
+scale = Vector2(0.33, 0.33)
+texture_normal = ExtResource("2_sugp2")
+
+[node name="NoButton" type="TextureButton" parent="LoadDialog" unique_id=2023522756]
+layout_mode = 0
+offset_left = 285.0
+offset_top = 88.0
+offset_right = 497.0
+offset_bottom = 300.0
+scale = Vector2(0.33, 0.33)
+texture_normal = ExtResource("3_jyhfs")
+
+[node name="Label" type="Label" parent="LoadDialog" unique_id=1401612199]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 10.0
+offset_right = 384.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 30
+text = "Загрузить сохранение?"
+
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="StatsButton" to="." method="_on_stats_button_pressed"]
+[connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]

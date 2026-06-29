@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://basiu0lfrsp47"]
+
+[ext_resource type="Texture2D" uid="uid://curyk8m6enp3j" path="res://resources/yes_button.png" id="1_826fv"]
+[ext_resource type="Script" uid="uid://ya2tn3fvmoc8" path="res://scenes/win.gd" id="1_iiocm"]
+[ext_resource type="VideoStream" uid="uid://d1howdldbf2oo" path="res://resources/winvid.ogv" id="2_iiocm"]
+[ext_resource type="Texture2D" uid="uid://bbai7pks866r4" path="res://resources/win1080.png" id="3_tylv2"]
+[ext_resource type="FontFile" uid="uid://deekk24grivc1" path="res://fonts/minecraft.ttf" id="5_5vxan"]
+
+[node name="Win" type="Control" unique_id=1794043234]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_iiocm")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1728181526]
+layout_mode = 0
+offset_left = 412.0
+offset_top = 851.0
+offset_right = 2332.0
+offset_bottom = 1931.0
+scale = Vector2(0.225, 0.225)
+stream = ExtResource("2_iiocm")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=82059975]
+layout_mode = 0
+offset_top = 85.0
+offset_right = 1920.0
+offset_bottom = 925.0
+texture = ExtResource("3_tylv2")
+
+[node name="Button" type="TextureButton" parent="." unique_id=301478462]
+layout_mode = 0
+offset_left = 1114.0
+offset_top = 934.99994
+offset_right = 1327.0
+offset_bottom = 1147.0
+scale = Vector2(0.55, 0.55)
+texture_normal = ExtResource("1_826fv")
+
+[node name="Label" type="Label" parent="." unique_id=1442368733]
+layout_mode = 0
+offset_left = 771.0
+offset_top = 23.0
+offset_right = 1206.0
+offset_bottom = 86.0
+theme_override_fonts/font = ExtResource("5_5vxan")
+theme_override_font_sizes/font_size = 40
+text = "Хорошая концовка"
+
+[node name="Label2" type="Label" parent="." unique_id=1047336372]
+layout_mode = 0
+offset_left = 875.0
+offset_top = 965.9999
+offset_right = 1217.0
+offset_bottom = 1070.0
+scale = Vector2(0.66, 0.66)
+theme_override_fonts/font = ExtResource("5_5vxan")
+theme_override_font_sizes/font_size = 83
+text = "В Меню"
+
+[node name="Label3" type="Label" parent="." unique_id=1463584112]
+layout_mode = 0
+offset_left = 555.0
+offset_top = 129.0
+offset_right = 1472.0
+offset_bottom = 208.0
+theme_override_fonts/font = ExtResource("5_5vxan")
+theme_override_font_sizes/font_size = 78
+text = "С возвращением ! :)"

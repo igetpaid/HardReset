@@ -1,0 +1,46 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[addons]
+
+auto_backup/save_frequency_minutes=5
+auto_backup/output_directory="C:\\Programs\\Godot Projects\\backups"
+auto_backup/enable_zipping=true
+auto_backup/persistent_count=true
+auto_backup/_internal_count_storage=477
+
+[application]
+
+config/name="Hard Reset"
+run/main_scene="uid://cfwtflqp7cs8y"
+config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+MinigameManager="*uid://y45xykuc876x"
+SaveManager="*uid://cg78tm8i6kegn"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
+window/stretch/mode="canvas_items"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_etc2_astc=true
