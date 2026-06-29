@@ -41,6 +41,23 @@ jobs:
         run: |
           mkdir -p build
           ${{ env.GODOT_BIN }} --headless --export-release "Windows Desktop" "build/${EXPORT_NAME}.exe"
+          echo "Export done. Build dir contents:"
+          ls -la build/
+
+      - name: Embed PCK into Executable
+        run: |
+          if [ -f "build/${EXPORT_NAME}.pck" ]; then
+            BEFORE=$(stat -c%s "build/${EXPORT_NAME}.exe")
+            PCK_SIZE=$(stat -c%s "build/${EXPORT_NAME}.pck")
+            cat "build/${EXPORT_NAME}.pck" >> "build/${EXPORT_NAME}.exe"
+            rm "build/${EXPORT_NAME}.pck"
+            AFTER=$(stat -c%s "build/${EXPORT_NAME}.exe")
+            echo "PCK embedded: ${BEFORE} + ${PCK_SIZE} = ${AFTER} bytes"
+            echo "Result: single file build/${EXPORT_NAME}.exe"
+          else
+            echo "No .pck file found — embedding may have already been done by Godot"
+            ls -la build/
+          fi
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
