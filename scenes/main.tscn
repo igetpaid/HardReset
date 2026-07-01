@@ -81,17 +81,21 @@ texture_normal = ExtResource("7_a8y0u")
 texture_hover = ExtResource("8_jkv2x")
 metadata/_edit_use_anchors_ = true
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=605517711]
+[node name="MobileToggle" type="Button" parent="." unique_id=605517711]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 1700.0
+offset_top = 1000.0
+offset_right = 1880.0
+offset_bottom = 1050.0
+theme_override_font_sizes/font_size = 24
+text = "Mobile ON/OFF"
 
 [node name="LoadDialog" type="Panel" parent="." unique_id=915609449]
 layout_mode = 0
 offset_left = 751.0
 offset_top = 381.0
 offset_right = 1170.0
-offset_bottom = 552.0
+offset_bottom = 565.0
 
 [node name="YesButton" type="TextureButton" parent="LoadDialog" unique_id=1214891957]
 layout_mode = 0

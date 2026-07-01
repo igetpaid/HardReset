@@ -18,6 +18,7 @@ var pixels_traveled = 0.0
 var cleaning_mode = false
 var is_rag_mode = false
 var start_time = 0.0
+var cleaning_start_time = 0.0
 var last_mouse_pos = Vector2()
 
 func _ready():
@@ -28,6 +29,7 @@ func _ready():
 	airblower_animation.visible = false
 
 func start():
+	
 	airblower_animation.visible = false
 	toggle_case_visibility.emit(false)
 	pixels_traveled = 0.0
@@ -54,6 +56,7 @@ func _on_duster_selected():
 	progress_bar.visible = true   # <-- показываем
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	last_mouse_pos = get_global_mouse_position()
+	cleaning_start_time = Time.get_ticks_msec() / 1000.0  # для расчёта бонуса за скорость
 
 func _on_airblower_selected():
 	if MinigameManager.subtract_money(25):
@@ -119,14 +122,30 @@ func animate_button_out(button: TextureButton):
 func _finish(success: bool):
 	toggle_case_visibility.emit(true)
 	var elapsed = (Time.get_ticks_msec() / 1000.0) - start_time
-	var reward = 30 if not is_rag_mode else 20
-	var exp = 60 if not is_rag_mode else 30
+	
+	# Награды: деньги всегда +20, опыт зависит от инструмента и скорости
+	var money = 20
+	var exp = 0
+	var multiplier = 1.0
 	
 	if success:
-		MinigameManager.add_money(reward)
+		if not is_rag_mode:  # воздуходувка — всегда +10 опыта
+			exp = 10
+		else:  # тряпка — бонус за скорость
+			var clean_time = (Time.get_ticks_msec() / 1000.0) - cleaning_start_time
+			if clean_time <= 5.0:
+				exp = 50
+				multiplier = 2.0
+			elif clean_time <= 7.0:
+				exp = 35
+				multiplier = 1.4
+			else:
+				exp = 25
+				multiplier = 1.0
+		
+		MinigameManager.add_money(money)
 		MinigameManager.add_exp(exp)
-		MinigameManager.xp_gained_with_multiplier.emit(exp, 1.0)
-		# Отправляем сигнал через MinigameManager, а не через completed
+		MinigameManager.xp_gained_with_multiplier.emit(exp, multiplier)
 		MinigameManager.complete_minigame("dusty_pc", success, elapsed)
 	
 	duster_cursor.visible = false

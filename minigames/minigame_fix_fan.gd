@@ -38,26 +38,11 @@ var is_fan_fixed = false
 var start_time: float = 0.0
 var completion_time: float = 0.0
 
+const MobileSizer = preload("res://tools/mobile_sizer.gd")
+
 func _ready():
-	# Сброс анимации, размера и масштаба
-	$MinigameClose.stop()
-	$MinigameClose.seek(0, true)
-	size = Vector2(1210, 810)
-	scale = Vector2(1, 1)
-	
-	screwdriver_button.pressed.connect(_on_screwdriver_selected)
-	electric_screwdriver_button.pressed.connect(_on_electric_screwdriver_selected)
-	
-	# Звук при нажатии на кнопки выбора инструмента
-	screwdriver_button.pressed.connect(_play_button_sound)
-	electric_screwdriver_button.pressed.connect(_play_button_sound)
-	
-	# Загрузка всех текстур
-	#background.texture = load("res://resources/minigames/background.png")
-	#broken_fan.texture = load("res://resources/minigames/broken_fan.png")
-	#fixed_fan.texture = load("res://resources/minigames/fixed_fan.png")
+	# 1. ЗАГРУЗКА ТЕКСТУР
 	trash_bin.texture = load("res://resources/minigames/trash_bin.png")
-	
 	
 	# 2. СБОР И НАСТРОЙКА БОЛТОВ
 	for child in bolts_container.get_children():
@@ -67,11 +52,36 @@ func _ready():
 			child.button_down.connect(_on_bolt_button_down.bind(child))
 			child.button_up.connect(_on_bolt_button_up.bind(child))
 	
-	# 3. СБОР И НАСТРОЙКА ОБВОДОК
+	# 3. СБОР И НАСТРОЙКА ОБВОДОК (текстура должна быть до MobileSizer)
 	for child in glow_rings_container.get_children():
 		if child is TextureRect:
 			glow_rings.append(child)
 			child.texture = load("res://resources/minigames/glow_ring.png")
+			# Linear-фильтр + pivot в центр — для плавного scale
+			child.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+			child.pivot_offset = child.size / 2.0
+	
+	# 4. MobileSizer — адаптация под мобильные устройства (увеличивает мелкие BaseButton)
+	MobileSizer.enlarge_scene(self)
+	
+	# 5. Явное увеличение GlowRing'ов на мобильных (TextureRect — MobileSizer их не трогает)
+	if OS.get_name() == "Android" or MobileSizer.force_enabled:
+		var glow_factor := 1.5
+		for ring in glow_rings:
+			ring.scale *= glow_factor
+	
+	# 6. Сброс анимации, размера и масштаба
+	# НЕ используем seek(0, true) — он может вызвать RESET-анимацию, сбрасывающую scale
+	$MinigameClose.stop()
+	size = Vector2(1210, 810)
+	scale = Vector2(1, 1)
+	
+	screwdriver_button.pressed.connect(_on_screwdriver_selected)
+	electric_screwdriver_button.pressed.connect(_on_electric_screwdriver_selected)
+	
+	# Звук при нажатии на кнопки выбора инструмента
+	screwdriver_button.pressed.connect(_play_button_sound)
+	electric_screwdriver_button.pressed.connect(_play_button_sound)
 			
 	# 4. НАЧАЛЬНЫЕ НАСТРОЙКИ
 	start_time = Time.get_ticks_msec() / 1000.0
@@ -101,15 +111,16 @@ func _on_screwdriver_selected():
 	print("Выбрана обычная отвёртка")
 
 func _on_electric_screwdriver_selected():
-	if MinigameManager.subtract_money(10):  # вернёт true, если хватило
+	if MinigameManager.subtract_money(10):
 		tool_selected = true
 		electric_mode = true
-		time_to_unscrew = 0.2
+		time_to_unscrew = 0.3
 		animate_button_out(screwdriver_button)
 		animate_button_out(electric_screwdriver_button)
 		print("Выбрана электроотвёртка, осталось денег: ", MinigameManager.player_money)
 	else:
 		print("Не хватает денег для электроотвёртки!")
+		_flash_button_red(electric_screwdriver_button)
 	
 func _process(delta):
 	if is_holding and current_bolt and tool_selected:
@@ -332,9 +343,11 @@ func _complete(success: bool):
 		trash_bin.hide() # убираем trash_bin из анимации закрытия
 		$MinigameClose.play("minigame_close") # анимация закрытия мини-игры
 		await $MinigameClose.animation_finished
+		# Сброс scale (анимация могла его изменить)
+		scale = Vector2(1, 1)
 		queue_free()
 	else:
-		print("не commplete :(")
+		print("не complete :(")
 		MinigameManager.complete_minigame("broken_fan", false, completion_time)
 		queue_free()
 
@@ -348,6 +361,12 @@ func _calculate_money_reward(completion_time: float) -> int:
 		
 func _play_button_sound():
 	$ButtonClickSound.play()
+
+func _flash_button_red(button: TextureButton):
+	# Красная вспышка — не хватает денег
+	var tween = create_tween()
+	tween.tween_property(button, "modulate", Color(1, 0.3, 0.3), 0.1)
+	tween.tween_property(button, "modulate", Color(1, 1, 1, 1), 0.4)
 
 func animate_button_out(button: TextureButton):
 	var tween = create_tween()

@@ -262,6 +262,16 @@ offset_right = 983.0
 offset_bottom = 188.0
 texture_normal = ExtResource("7_ssvqc")
 
+[node name="GlowHighlight" type="Panel" parent="ComputerView/FrontView/GamingFrontPanelButton" unique_id=1111111111]
+modulate = Color(1, 0.7490196, 0.101960786, 0.7019608)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="SideView" type="Control" parent="ComputerView" unique_id=1695450773]
 anchors_preset = 0
 
@@ -369,17 +379,19 @@ stretch_mode = 2
 [node name="AirblowerButton" type="TextureButton" parent="MinigameDustyPC" unique_id=695098869]
 layout_mode = 0
 offset_left = 1934.0
-offset_top = 122.0
+offset_top = 215.0
 offset_right = 2348.0
-offset_bottom = 536.0
+offset_bottom = 629.00116
+scale = Vector2(0.85, 0.85)
 texture_normal = ExtResource("23_pl11u")
 
 [node name="DusterButton" type="TextureButton" parent="MinigameDustyPC" unique_id=1705672955]
 layout_mode = 0
 offset_left = 1934.0
-offset_top = 559.0
+offset_top = 585.0
 offset_right = 2348.0
-offset_bottom = 973.0
+offset_bottom = 999.0
+scale = Vector2(0.85, 0.85)
 texture_normal = ExtResource("24_bhx41")
 
 [node name="DusterCursor" type="TextureRect" parent="MinigameDustyPC" unique_id=196157043]

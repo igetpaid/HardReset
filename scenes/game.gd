@@ -26,6 +26,10 @@ $ComputerView/FrontView/GamingBrokenFan3]
 @onready var side_panel = $ComputerView/SideView/GamingSidePanel
 @onready var thumb_bolt_sound = $ThumbBoltSound
 
+# Glow-обводка для GamingFrontPanelButton (постоянно, исчезает при нажатии)
+var front_panel_glow: Panel = null
+var _front_panel_glow_tween: Tween = null
+
 var side_panel_textures = {
 	"Customer1": preload("res://resources/cover_babushka.png"),
 	"Customer2": preload("res://resources/cover_lazarev.png"),
@@ -60,6 +64,8 @@ const XP_POPUP_RISE_DISTANCE := 50.0
 var xp_popup_container: CanvasLayer
 
 var last_money_amount: int = 0
+
+const MobileSizer = preload("res://tools/mobile_sizer.gd")
 
 var is_front_view = true
 
@@ -107,8 +113,24 @@ func _on_return_button_pressed() -> void:
 	get_tree().quit()
 
 func _ready():
+	# GamingFrontPanelButton: НЕ увеличивать (вместо этого — обводка)
+	front_panel_button.set_meta("mobile_exclude", true)
+	# GlowHighlight Panel — прямоугольная обводка через StyleBoxFlat
+	front_panel_glow = front_panel_button.get_node_or_null("GlowHighlight") as Panel
+	if front_panel_glow:
+		var style := StyleBoxFlat.new()
+		style.draw_center = false
+		style.border_color = Color(1, 0.65, 0.1)
+		style.border_width_left = 3
+		style.border_width_right = 3
+		style.border_width_top = 3
+		style.border_width_bottom = 3
+		front_panel_glow.add_theme_stylebox_override("panel", style)
+	
+	MobileSizer.enlarge_scene(self)
 	MinigameManager.load_progress()
 	last_money_amount = MinigameManager.player_money
+	
 	for bolt in thumb_bolts:
 		bolt.button_down.connect(_on_bolt_button_down.bind(bolt))
 		bolt.button_up.connect(_on_bolt_button_up.bind(bolt))
@@ -280,6 +302,7 @@ func _on_task_box_pressed():
 	
 	# Показываем компьютер
 	$ComputerView.visible = true
+	_show_front_panel_glow()  # первый реальный показ обводки
 	$RotateButton.visible = true
 		
 func _on_task_box_completed():
@@ -463,10 +486,46 @@ func _on_rotate_pressed():
 func show_front_view():
 	front_view.visible = true
 	side_view.visible = false
+	_show_front_panel_glow()
 
 func show_side_view():
 	front_view.visible = false
 	side_view.visible = true
+	# Скрываем обводку при переключении на боковой вид
+	if front_panel_glow and front_panel_glow.visible:
+		_hide_front_panel_glow()
+
+func _show_front_panel_glow():
+	if not front_panel_glow:
+		return
+	if is_panel_open:
+		return
+	if not front_panel_button.is_visible_in_tree():
+		return
+	
+	front_panel_glow.visible = true
+	# Явно устанавливаем modulate (GDScript не поддерживает chained property set)
+	var glow_color := front_panel_glow.modulate
+	glow_color.a = 0.7
+	front_panel_glow.modulate = glow_color
+	
+	# Пульсирующая анимация (сбрасываем старый твин)
+	if _front_panel_glow_tween:
+		_front_panel_glow_tween.kill()
+	_front_panel_glow_tween = create_tween().set_loops()
+	_front_panel_glow_tween.tween_property(front_panel_glow, "modulate:a", 0.3, 0.6)
+	_front_panel_glow_tween.tween_property(front_panel_glow, "modulate:a", 0.8, 0.6)
+
+func _hide_front_panel_glow():
+	if not front_panel_glow:
+		return
+	front_panel_glow.visible = false
+	var glow_color := front_panel_glow.modulate
+	glow_color.a = 0.7
+	front_panel_glow.modulate = glow_color
+	if _front_panel_glow_tween:
+		_front_panel_glow_tween.kill()
+		_front_panel_glow_tween = null
 
 func _on_broken_fan_pressed(button: TextureButton):
 	print("Запуск мини-игры для сломанного кулера")
@@ -516,7 +575,7 @@ func show_xp_popup(amount: int, multiplier: float = 1.0):
 	
 	var text = "XP +" + str(amount)
 	if multiplier > 1.0:
-		text += " (бонус x" + str(multiplier).trim_suffix(".0") + ")"
+		text += " (бонус за скорость x" + str(multiplier).trim_suffix(".0") + ")"
 	label.text = text
 	
 	label.add_theme_font_override("font", money_label.get_theme_font("font"))
@@ -536,8 +595,8 @@ func show_xp_popup(amount: int, multiplier: float = 1.0):
 	label.add_theme_color_override("font_color", color)
 	
 	var progress_bar = $ExpPanel/ExpProgressBar
-	label.position = progress_bar.global_position + Vector2(10, -28)
-	label.size = Vector2(progress_bar.size.x - 20, 40)
+	label.position = progress_bar.global_position + Vector2(-80, -28)
+	label.size = Vector2(progress_bar.size.x + 160, 40)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
 	add_child(label)
@@ -556,6 +615,8 @@ func _on_front_panel_button_pressed():
 	tween.tween_property(front_panel_button, "position:y", front_panel_button.position.y + 6, 0.1)
 	
 	is_panel_open = true
+	# Скрываем обводку — туториал пройден
+	_hide_front_panel_glow()
 	print("Передняя панель разблокирована")
 
 func _on_front_panel_pressed():

@@ -8,7 +8,7 @@ signal xp_gained_with_multiplier(amount: int, multiplier: float)
 
 var current_minigame = null
 var current_fan_button = null
-var player_money: int = 100
+var player_money: int = 0
 var current_exp: int = 0
 var current_level: int = 1
 var exp_to_next_level: int = 100

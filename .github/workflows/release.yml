@@ -119,6 +119,45 @@ jobs:
           Write-Output "Build verified: $file, $([math]::Round($size/1MB, 2)) MB"
           if ($size -lt 1MB) { throw "Build too small (< 1 MB), something went wrong" }
 
+      # === Android ===
+      - name: Generate Android Debug Keystore
+        run: |
+          & "$env:JAVA_HOME\bin\keytool" -genkey -v -keystore debug.keystore `
+            -alias android -keyalg RSA -keysize 2048 -validity 10000 `
+            -storepass android -keypass android `
+            -dname "CN=,OU=,O=,L=,ST=,C="
+          Write-Output "Keystore created: $(Get-Item debug.keystore).Length bytes"
+
+      - name: Export Android APK
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: ${{ github.workspace }}\debug.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: android
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: android
+        run: |
+          $verbose = "${{ inputs.debug }}" -eq "true"
+          $flags = @("--headless")
+          if ($verbose) { $flags += "--verbose" }
+          Write-Output "Exporting Android APK..."
+          & "$env:GODOT_BIN" @flags --export-release "Android" "build\$env:EXPORT_NAME.apk" 2>&1
+          $exit = $LASTEXITCODE
+          if ($exit -ne 0) {
+            Write-Output "--- First attempt failed (code $exit). Retrying ---"
+            & "$env:GODOT_BIN" --verbose --export-release "Android" "build\$env:EXPORT_NAME.apk" 2>&1
+            if ($LASTEXITCODE -ne 0) {
+              throw "Android export failed after retry"
+            }
+          }
+          $file = Get-Item "build\$env:EXPORT_NAME.apk"
+          Write-Output "SUCCESS: $($file.FullName) ($([math]::Round($file.Length/1MB, 2)) MB)"
+
+      - name: Verify APK
+        run: |
+          $file = "build\$env:EXPORT_NAME.apk"
+          if (-not (Test-Path $file)) { throw "APK not found!" }
+          $size = (Get-Item $file).Length
+          Write-Output "APK verified: $file, $([math]::Round($size/1MB, 2)) MB"
+          if ($size -lt 1MB) { throw "APK too small (< 1 MB), something went wrong" }
+
       # === Release ===
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
