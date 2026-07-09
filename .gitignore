@@ -8,8 +8,10 @@ addons/
 # Личные файлы проекта (идеи, планы, заметки)
 .opencode/
 
-# Тестовые сборки
+# Сборки
+.release/
 Local_Test/
+android/
 
 # OS
 Thumbs.db

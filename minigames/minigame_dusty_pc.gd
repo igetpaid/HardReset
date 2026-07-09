@@ -78,6 +78,7 @@ func _on_airblower_selected():
 		dust_tween.tween_callback(_finish.bind(true))
 	else:
 		print("Не хватает денег для баллончика!")
+		_flash_button_red(airblower_button)
 
 func _process(delta):
 	if not cleaning_mode or not is_rag_mode:
@@ -111,6 +112,11 @@ func animate_button_in(button: TextureButton, start_x: float):
 	var tween = create_tween()
 	tween.tween_property(button, "position:x", button.position.x - 478, 0.15)
 	tween.parallel().tween_property(button, "modulate:a", 1.0, 0.25)
+
+func _flash_button_red(button: TextureButton):
+	var tween = create_tween()
+	tween.tween_property(button, "modulate", Color(1, 0.3, 0.3), 0.1)
+	tween.tween_property(button, "modulate", Color(1, 1, 1, 1), 0.4)
 
 func animate_button_out(button: TextureButton):
 	play_click_sound.emit()

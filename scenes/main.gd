@@ -13,27 +13,32 @@ var current_state = MenuState.MENU
 @onready var mobile_toggle = $SettingsGroup/MobileToggle
 @onready var github_button = $SettingsGroup/GithubButton
 @onready var vk_button = $SettingsGroup/VkButton
-@onready var stats_button = $SettingsGroup/StatsButton
 @onready var load_dialog = $LoadDialog
 @onready var yes_button = $LoadDialog/YesButton
 @onready var no_button = $LoadDialog/NoButton
+@onready var link_dialog = $LinkDialog
+@onready var link_label = $LinkDialog/LinkLabel
+@onready var open_button = $LinkDialog/OpenButton
+@onready var cancel_button = $LinkDialog/CancelButton
 
 const MobileSizer = preload("res://tools/mobile_sizer.gd")
 
+var pending_url: String = ""
+
+
 func _ready():
+	# Исключаем крупные кнопки меню из MobileSizer (они и так большие)
+	play_button.set_meta("mobile_exclude", true)
+	settings_button.set_meta("mobile_exclude", true)
+
 	MobileSizer.enlarge_scene(self)
 	load_dialog.visible = false
+	link_dialog.visible = false
 	_set_state(MenuState.MENU)
-	
-	play_button.pressed.connect(_on_play_button_pressed)
-	settings_button.pressed.connect(_on_settings_pressed)
-	back_button.pressed.connect(_on_back_pressed)
-	mobile_toggle.pressed.connect(_on_mobile_toggle)
-	github_button.pressed.connect(_on_github_pressed)
-	vk_button.pressed.connect(_on_vk_pressed)
-	stats_button.pressed.connect(_on_stats_button_pressed)
-	yes_button.pressed.connect(_on_yes_pressed)
-	no_button.pressed.connect(_on_no_pressed)
+	# Синхронизируем текст тоггла с фактическим состоянием
+	mobile_toggle.button_pressed = MobileSizer.force_enabled
+	_update_toggle_text()
+
 
 
 func _set_state(state: MenuState):
@@ -53,20 +58,39 @@ func _on_back_pressed():
 
 
 func _on_github_pressed():
-	OS.shell_open("https://github.com/igetpaid/HardReset")
+	pending_url = "https://github.com/igetpaid/HardReset"
+	link_label.text = "https://github.com/igetpaid/HardReset"
+	link_dialog.visible = true
 
 
 func _on_vk_pressed():
-	OS.shell_open("https://vk.com/igor_tengel")
+	pending_url = "https://vk.com/igor_tengel"
+	link_label.text = "https://vk.com/igor_tengel"
+	link_dialog.visible = true
 
+
+func _on_link_confirmed():
+	OS.shell_open(pending_url)
+	link_dialog.visible = false
+
+
+func _on_link_cancelled():
+	link_dialog.visible = false
+
+
+func _update_toggle_text():
+	if MobileSizer.force_enabled:
+		mobile_toggle.text = "Large Buttons: ON"
+	else:
+		mobile_toggle.text = "Large Buttons: OFF"
 
 func _on_mobile_toggle():
-	MobileSizer.force_enabled = not MobileSizer.force_enabled
+	MobileSizer.force_enabled = mobile_toggle.button_pressed
 	if MobileSizer.force_enabled:
 		MobileSizer.enlarge_scene(self)
-		mobile_toggle.text = "Mobile Mode: ON"
 	else:
-		get_tree().reload_current_scene()
+		MobileSizer.shrink_scene(self)
+	_update_toggle_text()
 
 
 func _on_play_button_pressed():
@@ -94,7 +118,3 @@ func _start_new_game():
 	MinigameManager.exp_to_next_level = 100
 	SaveManager.delete_save()
 	get_tree().change_scene_to_file("res://scenes/intro.tscn")
-
-
-func _on_stats_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/stats.tscn")

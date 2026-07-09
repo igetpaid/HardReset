@@ -1,6 +1,7 @@
 # mobile_sizer.gd
 # Увеличивает мелкие кнопки для Android touch targets.
 # Вызвать: MobileSizer.enlarge_scene(self) в _ready() любой сцены.
+# Отключить: MobileSizer.shrink_scene(self) — возвращает scale обратно.
 # На Windows — ничего не делает, если force_enabled = false.
 #
 # Подход: SCALE вместо изменения rect.
@@ -12,21 +13,43 @@
 # Исключить кнопку из увеличения:
 #   btn.set_meta("mobile_exclude", true)
 #
-# Когда вызывается несколько раз (разные сцены в одной сессии),
-# scale применяется один раз на каждый заход в _ready().
+# enlarge_scene и shrink_scene — идемпотентны.
+# Повторный вызов enlarge на уже увеличенной сцене — безопасен (ничего не делает).
 
 static var force_enabled: bool = false
+
 
 static func enlarge_scene(root: Node, factor: float = 1.5) -> void:
 	if OS.get_name() != "Android" and not force_enabled:
 		return
+	if root.has_meta("mobile_enlarged") and root.get_meta("mobile_enlarged"):
+		return  # уже увеличена
 	_collect_and_enlarge(root, factor)
+	root.set_meta("mobile_enlarged", true)
+
+
+static func shrink_scene(root: Node, factor: float = 1.5) -> void:
+	if OS.get_name() != "Android" and not force_enabled:
+		return
+	if not root.has_meta("mobile_enlarged") or not root.get_meta("mobile_enlarged"):
+		return  # не была увеличена
+	_collect_and_shrink(root, factor)
+	root.set_meta("mobile_enlarged", false)
+
 
 static func _collect_and_enlarge(node: Node, factor: float) -> void:
 	for child in node.get_children():
 		if _is_small_button(child):
 			_enlarge(child, factor)
 		_collect_and_enlarge(child, factor)
+
+
+static func _collect_and_shrink(node: Node, factor: float) -> void:
+	for child in node.get_children():
+		if _is_small_button(child):
+			_shrink(child, factor)
+		_collect_and_shrink(child, factor)
+
 
 # Проверка: визуальный размер (rect_size * собственный scale) меньше 100px
 # visible НЕ проверяем — кнопки в диалогах/скрытых панелях тоже должны быть увеличены
@@ -43,6 +66,7 @@ static func _is_small_button(node: Node) -> bool:
 		return false
 	var visual_size = c.size * c.scale
 	return min(visual_size.x, visual_size.y) < 100.0
+
 
 static func _enlarge(ctrl: Control, factor: float) -> void:
 	# Linear-фильтр — дробный scale (1.5x) даёт плавное, а не ломаное изображение
@@ -62,3 +86,16 @@ static func _enlarge(ctrl: Control, factor: float) -> void:
 			ctrl.position += ctrl.size * (old_scale - Vector2.ONE) / 2.0
 	# scale применяется от pivot — rect не трогается, центр сохраняется
 	ctrl.scale *= factor
+
+
+static func _shrink(ctrl: Control, factor: float) -> void:
+	# Обратная операция: scale /= factor
+	ctrl.scale /= factor
+	# Возвращаем pivot_offset (если он был установлен нами)
+	if ctrl.pivot_offset == ctrl.size / 2.0 and ctrl.rotation == 0.0:
+		# Если кнопка не повёрнута — безопасно сбросить pivot
+		# Отменяем компенсацию позиции (если была)
+		var old_scale := ctrl.scale * factor  # то, что было ДО деления
+		if old_scale != Vector2.ONE:
+			ctrl.position -= ctrl.size * (old_scale - Vector2.ONE) / 2.0
+		ctrl.pivot_offset = Vector2.ZERO

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsvm2n15u7ovt"
-path="res://.godot/imported/settings_menu.png-559c300b82d6b7523ee0b09f4976d70e.ctex"
+uid="uid://dvm84svwuka3x"
+path="res://.godot/imported/640x244_green_button_base.png-f739445703310c9676fded51e10109d8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://добавить/main_menu_2/settings_menu.png"
-dest_files=["res://.godot/imported/settings_menu.png-559c300b82d6b7523ee0b09f4976d70e.ctex"]
+source_file="res://resources/640x244_green_button_base.png"
+dest_files=["res://.godot/imported/640x244_green_button_base.png-f739445703310c9676fded51e10109d8.ctex"]
 
 [params]
 

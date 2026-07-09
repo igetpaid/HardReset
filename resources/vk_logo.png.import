@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qp461t2880n"
-path="res://.godot/imported/main_background.png-5328fa33727dd46d851a955c68d2ee16.ctex"
+uid="uid://54yl81ijuht7"
+path="res://.godot/imported/vk_logo.png-f693c8c3e1a382279157f18a0a414cbe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://добавить/main_menu_2/main_background.png"
-dest_files=["res://.godot/imported/main_background.png-5328fa33727dd46d851a955c68d2ee16.ctex"]
+source_file="res://resources/vk_logo.png"
+dest_files=["res://.godot/imported/vk_logo.png-f693c8c3e1a382279157f18a0a414cbe.ctex"]
 
 [params]
 
