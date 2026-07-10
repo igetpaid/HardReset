@@ -286,6 +286,7 @@ offset_bottom = 1024.0
 texture = ExtResource("10_1kice")
 
 [node name="GamingDustyLook" type="TextureRect" parent="ComputerView/SideView" unique_id=856919029]
+visible = false
 layout_mode = 0
 offset_left = 553.0
 offset_top = 122.0
@@ -355,6 +356,7 @@ pivot_offset = Vector2(31.5, 16.5)
 texture_normal = ExtResource("23_m4url")
 
 [node name="MinigameDustyPC" type="Control" parent="." unique_id=499065692]
+visible = false
 anchors_preset = 0
 offset_left = -1.0
 offset_right = 39.0
