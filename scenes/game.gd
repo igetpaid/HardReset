@@ -67,6 +67,9 @@ var last_money_amount: int = 0
 
 const MobileSizer = preload("res://tools/mobile_sizer.gd")
 
+@onready var pause_button = $PauseButton
+@onready var pause_menu = $PauseMenu
+
 var is_front_view = true
 
 var next_button_blinking = false
@@ -200,6 +203,10 @@ func _ready():
 	
 	recent_customers = []
 	
+	# Музыка
+	SoundManager.play_music("res://audio/music/main_music.mp3")
+	pause_button.pressed.connect(_on_pause_pressed)
+
 	await get_tree().create_timer(1).timeout
 	_spawn_next_customer()
 	
@@ -460,6 +467,10 @@ func _on_level_up(new_level: int):
 	# Можно добавить звук повышения уровня
 	if new_level == 3:
 		_show_level3_panel()
+
+
+func _on_pause_pressed() -> void:
+	pause_menu.visible = true
 		
 func _on_money_changed(new_amount: int):
 	var delta = new_amount - last_money_amount

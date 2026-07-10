@@ -20,6 +20,8 @@ var current_state = MenuState.MENU
 @onready var link_label = $LinkDialog/LinkLabel
 @onready var open_button = $LinkDialog/OpenButton
 @onready var cancel_button = $LinkDialog/CancelButton
+@onready var music_slider = $SettingsGroup/MusicSlider
+@onready var sfx_slider = $SettingsGroup/SfxSlider
 
 const MobileSizer = preload("res://tools/mobile_sizer.gd")
 
@@ -35,6 +37,14 @@ func _ready():
 	load_dialog.visible = false
 	link_dialog.visible = false
 	_set_state(MenuState.MENU)
+
+	# Слайдеры громкости
+	music_slider.value = SoundManager.music_volume
+	sfx_slider.value = SoundManager.sfx_volume
+	music_slider.value_changed.connect(_on_music_slider_changed)
+	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
+	_style_sliders()
+
 	# Синхронизируем текст тоггла с фактическим состоянием
 	mobile_toggle.button_pressed = MobileSizer.force_enabled
 	_update_toggle_text()
@@ -118,3 +128,48 @@ func _start_new_game():
 	MinigameManager.exp_to_next_level = 100
 	SaveManager.delete_save()
 	get_tree().change_scene_to_file("res://scenes/intro.tscn")
+
+
+func _on_music_slider_changed(value: float) -> void:
+	SoundManager.set_music_volume(value)
+
+
+func _on_sfx_slider_changed(value: float) -> void:
+	SoundManager.set_sfx_volume(value)
+
+
+func _style_sliders() -> void:
+	# Стилизуем слайдеры: зелёная заливка слева, серая дорожка справа
+	for slider in [music_slider, sfx_slider]:
+		var track := StyleBoxFlat.new()
+		track.bg_color = Color(0.3, 0.3, 0.33)
+		track.corner_radius_top_left = 4
+		track.corner_radius_top_right = 4
+		track.corner_radius_bottom_left = 4
+		track.corner_radius_bottom_right = 4
+		track.content_margin_left = 0
+		track.content_margin_right = 0
+		track.content_margin_top = 0
+		track.content_margin_bottom = 0
+
+		var fill := StyleBoxFlat.new()
+		fill.bg_color = Color(0.3, 0.7, 0.3)
+		fill.corner_radius_top_left = 4
+		fill.corner_radius_top_right = 4
+		fill.corner_radius_bottom_left = 4
+		fill.corner_radius_bottom_right = 4
+		fill.content_margin_left = 0
+		fill.content_margin_right = 0
+		fill.content_margin_top = 0
+		fill.content_margin_bottom = 0
+
+		var grabber := StyleBoxFlat.new()
+		grabber.bg_color = Color(1, 1, 1)
+		grabber.corner_radius_top_left = 8
+		grabber.corner_radius_top_right = 8
+		grabber.corner_radius_bottom_left = 8
+		grabber.corner_radius_bottom_right = 8
+
+		slider.add_theme_stylebox_override("slider", track)
+		slider.add_theme_stylebox_override("grabber_area", fill)
+		slider.add_theme_stylebox_override("grabber", grabber)

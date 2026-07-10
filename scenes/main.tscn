@@ -96,12 +96,52 @@ theme_override_font_sizes/font_size = 34
 toggle_mode = true
 text = "Large Buttons: OFF"
 
+[node name="MusicLabel" type="Label" parent="SettingsGroup" unique_id=1001]
+layout_mode = 0
+offset_left = 689.0
+offset_top = 445.0
+offset_right = 1189.0
+offset_bottom = 475.0
+theme_override_font_sizes/font_size = 22
+text = "Громкость музыки"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsGroup" unique_id=1002]
+layout_mode = 0
+offset_left = 689.0
+offset_top = 480.0
+offset_right = 1189.0
+offset_bottom = 510.0
+value = 0.8
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+
+[node name="SfxLabel" type="Label" parent="SettingsGroup" unique_id=1003]
+layout_mode = 0
+offset_left = 689.0
+offset_top = 530.0
+offset_right = 1189.0
+offset_bottom = 560.0
+theme_override_font_sizes/font_size = 22
+text = "Громкость звуков"
+
+[node name="SfxSlider" type="HSlider" parent="SettingsGroup" unique_id=1004]
+layout_mode = 0
+offset_left = 689.0
+offset_top = 565.0
+offset_right = 1189.0
+offset_bottom = 595.0
+value = 0.8
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+
 [node name="GithubButton" type="TextureButton" parent="SettingsGroup" unique_id=360078955]
 layout_mode = 0
 offset_left = 704.0
-offset_top = 435.0
+offset_top = 620.0
 offset_right = 960.0
-offset_bottom = 691.0
+offset_bottom = 876.0
 texture_normal = ExtResource("8_ya4ey")
 ignore_texture_size = true
 stretch_mode = 0
@@ -109,9 +149,9 @@ stretch_mode = 0
 [node name="VkButton" type="TextureButton" parent="SettingsGroup" unique_id=584961006]
 layout_mode = 0
 offset_left = 1011.0
-offset_top = 443.0
+offset_top = 620.0
 offset_right = 1267.0
-offset_bottom = 699.0
+offset_bottom = 876.0
 texture_normal = ExtResource("9_s3ugp")
 
 [node name="LoadDialog" type="Panel" parent="." unique_id=1423180461]

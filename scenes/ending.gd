@@ -19,6 +19,10 @@ const REACTION_TIMEOUT := 120.0
 var reaction_timer: SceneTreeTimer = null
 
 func _ready():
+	# Музыка: финальная миссия
+	SoundManager.stop_music()
+	SoundManager.play_music("res://audio/music/final_challenge_music.mp3")
+
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	# Скрываем всё лишнее
 	qte_panel.visible = false

@@ -27,6 +27,7 @@ config/icon="res://icon.png"
 
 MinigameManager="*uid://y45xykuc876x"
 SaveManager="*uid://cg78tm8i6kegn"
+SoundManager="*res://autoload/SoundManager.gd"
 
 [display]
 
