@@ -10,9 +10,12 @@
 [ext_resource type="Texture2D" uid="uid://dl63me4jis1m5" path="res://resources/github_logo.png" id="8_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://54yl81ijuht7" path="res://resources/vk_logo.png" id="9_s3ugp"]
 [ext_resource type="Texture2D" uid="uid://curyk8m6enp3j" path="res://resources/yes_button.png" id="10_9m7x0"]
+[ext_resource type="FontFile" uid="uid://deekk24grivc1" path="res://fonts/minecraft.ttf" id="10_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://dgl8uo0cn1wh5" path="res://resources/no_button.png" id="11_av3fd"]
 [ext_resource type="Theme" uid="uid://dov4gmc44fjd2" path="res://resources/themes/main_theme.tres" id="12_theme"]
-[ext_resource type="Texture2D" uid="uid://dvm84svwuka3x" path="res://resources/640x244_green_button_base.png" id="13_green"]
+[ext_resource type="Texture2D" uid="uid://cwwnx3fjtm35s" path="res://resources/back_button_blue_150px.png" id="14_back"]
+[ext_resource type="PackedScene" uid="uid://36mes7ijctdl" path="res://scenes/volume_controls.tscn" id="15_vol"]
+[ext_resource type="Texture2D" uid="uid://d3neuuti3gr7u" path="res://resources/large_button_mode_button_350x108px.png" id="16_large"]
 
 [node name="Control" type="Control" unique_id=2132697914]
 layout_mode = 3
@@ -67,92 +70,48 @@ offset_bottom = 1080.0
 [node name="BackButton" type="TextureButton" parent="SettingsGroup" unique_id=2025863437]
 layout_mode = 0
 offset_left = 30.0
-offset_top = 30.0
-offset_right = 296.0
-offset_bottom = 125.0
-texture_normal = ExtResource("13_green")
+offset_top = 106.0
+offset_right = 337.0
+offset_bottom = 256.0
+texture_normal = ExtResource("14_back")
+
+[node name="MobileToggle" type="TextureButton" parent="SettingsGroup" unique_id=1749071999]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 712.0
+offset_right = 1118.0
+offset_bottom = 820.0
+texture_normal = ExtResource("16_large")
 ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label" type="Label" parent="SettingsGroup/BackButton" unique_id=421337]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 26
-text = "« Back"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MobileToggle" type="Button" parent="SettingsGroup" unique_id=1749071999]
-layout_mode = 0
-offset_left = 689.0
-offset_top = 270.0
-offset_right = 1189.0
-offset_bottom = 420.0
-theme_override_font_sizes/font_size = 34
+stretch_mode = 2
 toggle_mode = true
-text = "Large Buttons: OFF"
 
-[node name="MusicLabel" type="Label" parent="SettingsGroup" unique_id=1001]
+[node name="VolumeControls" parent="SettingsGroup" unique_id=263950954 instance=ExtResource("15_vol")]
 layout_mode = 0
-offset_left = 689.0
-offset_top = 445.0
-offset_right = 1189.0
-offset_bottom = 475.0
-theme_override_font_sizes/font_size = 22
-text = "Громкость музыки"
-
-[node name="MusicSlider" type="HSlider" parent="SettingsGroup" unique_id=1002]
-layout_mode = 0
-offset_left = 689.0
-offset_top = 480.0
-offset_right = 1189.0
-offset_bottom = 510.0
-value = 0.8
-min_value = 0.0
-max_value = 1.0
-step = 0.01
-
-[node name="SfxLabel" type="Label" parent="SettingsGroup" unique_id=1003]
-layout_mode = 0
-offset_left = 689.0
-offset_top = 530.0
-offset_right = 1189.0
-offset_bottom = 560.0
-theme_override_font_sizes/font_size = 22
-text = "Громкость звуков"
-
-[node name="SfxSlider" type="HSlider" parent="SettingsGroup" unique_id=1004]
-layout_mode = 0
-offset_left = 689.0
-offset_top = 565.0
-offset_right = 1189.0
-offset_bottom = 595.0
-value = 0.8
-min_value = 0.0
-max_value = 1.0
-step = 0.01
+offset_left = 712.0
+offset_top = 336.0
+offset_right = 1212.0
+offset_bottom = 536.0
 
 [node name="GithubButton" type="TextureButton" parent="SettingsGroup" unique_id=360078955]
 layout_mode = 0
-offset_left = 704.0
-offset_top = 620.0
-offset_right = 960.0
-offset_bottom = 876.0
+offset_left = 1545.0
+offset_top = 110.0
+offset_right = 1676.0
+offset_bottom = 241.0
 texture_normal = ExtResource("8_ya4ey")
 ignore_texture_size = true
 stretch_mode = 0
 
 [node name="VkButton" type="TextureButton" parent="SettingsGroup" unique_id=584961006]
 layout_mode = 0
-offset_left = 1011.0
-offset_top = 620.0
-offset_right = 1267.0
-offset_bottom = 876.0
+offset_left = 1713.0
+offset_top = 111.0
+offset_right = 1843.4333
+offset_bottom = 241.0
 texture_normal = ExtResource("9_s3ugp")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="LoadDialog" type="Panel" parent="." unique_id=1423180461]
 visible = false

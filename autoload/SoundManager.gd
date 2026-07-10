@@ -43,6 +43,10 @@ func _setup_busses() -> void:
 	else:
 		sfx_bus = AudioServer.get_bus_index("SFX")
 
+	# Делаем Music не наследуемым от Master (чтобы не было двойной громкости)
+	AudioServer.set_bus_send(music_bus, &"Master")
+	AudioServer.set_bus_send(sfx_bus, &"Master")
+
 
 func set_music_volume(value: float) -> void:
 	music_volume = clampf(value, 0.0, 1.0)

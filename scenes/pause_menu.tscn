@@ -1,7 +1,9 @@
-[gd_scene format=3 uid="uid://pause_menu"]
+[gd_scene format=3 uid="uid://moupsie2oa5a"]
 
-[ext_resource type="Script" path="res://scenes/pause_menu.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://dvm84svwuka3x" path="res://resources/640x244_green_button_base.png" id="2"]
+[ext_resource type="Script" uid="uid://d2gbshuh1ujqd" path="res://scenes/pause_menu.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://36mes7ijctdl" path="res://scenes/volume_controls.tscn" id="3_vol"]
+[ext_resource type="Texture2D" uid="uid://dbyqy2b6424vv" path="res://resources/save_and_exit_button_150px.png" id="4_save"]
+[ext_resource type="Texture2D" uid="uid://bc3c1liw8x8ky" path="res://resources/close_button_79x76px.png" id="5_close"]
 
 [node name="PauseMenu" type="Control" unique_id=1]
 layout_mode = 3
@@ -11,7 +13,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
-visible = false
 
 [node name="Overlay" type="ColorRect" parent="." unique_id=2]
 layout_mode = 1
@@ -20,8 +21,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.5)
 mouse_filter = 2
+color = Color(0, 0, 0, 0.5)
 
 [node name="Panel" type="Panel" parent="." unique_id=3]
 layout_mode = 0
@@ -37,89 +38,29 @@ offset_top = 20.0
 offset_right = 450.0
 offset_bottom = 70.0
 theme_override_font_sizes/font_size = 36
-horizontal_alignment = 1
 text = "Пауза"
+horizontal_alignment = 1
 
-[node name="MusicLabel" type="Label" parent="Panel" unique_id=5]
+[node name="VolumeControls" parent="Panel" unique_id=1475662180 instance=ExtResource("3_vol")]
 layout_mode = 0
-offset_left = 80.0
-offset_top = 100.0
-offset_right = 620.0
-offset_bottom = 130.0
-theme_override_font_sizes/font_size = 22
-text = "Громкость музыки"
-
-[node name="MusicSlider" type="HSlider" parent="Panel" unique_id=6]
-layout_mode = 0
-offset_left = 80.0
-offset_top = 140.0
-offset_right = 620.0
-offset_bottom = 170.0
-value = 0.8
-min_value = 0.0
-max_value = 1.0
-step = 0.01
-
-[node name="SfxLabel" type="Label" parent="Panel" unique_id=7]
-layout_mode = 0
-offset_left = 80.0
-offset_top = 200.0
-offset_right = 620.0
-offset_bottom = 230.0
-theme_override_font_sizes/font_size = 22
-text = "Громкость звуков"
-
-[node name="SfxSlider" type="HSlider" parent="Panel" unique_id=8]
-layout_mode = 0
-offset_left = 80.0
-offset_top = 240.0
-offset_right = 620.0
-offset_bottom = 270.0
-value = 0.8
-min_value = 0.0
-max_value = 1.0
-step = 0.01
+offset_left = 102.0
+offset_top = 94.0
+offset_right = 602.0
+offset_bottom = 294.0
 
 [node name="CloseButton" type="TextureButton" parent="Panel" unique_id=9]
 layout_mode = 0
-offset_left = 640.0
-offset_top = 10.0
-offset_right = 690.0
-offset_bottom = 60.0
-texture_normal = ExtResource("2")
+offset_left = 614.0
+offset_top = 6.0
+offset_right = 693.0
+offset_bottom = 82.0
+texture_normal = ExtResource("5_close")
 ignore_texture_size = true
-stretch_mode = 0
-
-[node name="CloseLabel" type="Label" parent="Panel/CloseButton" unique_id=10]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 28
-text = "✕"
 
 [node name="SaveExitButton" type="TextureButton" parent="Panel" unique_id=11]
 layout_mode = 0
-offset_left = 150.0
-offset_top = 310.0
-offset_right = 550.0
-offset_bottom = 380.0
-texture_normal = ExtResource("2")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="SaveExitLabel" type="Label" parent="Panel/SaveExitButton" unique_id=12]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 26
-text = "Сохранить и выйти"
+offset_left = 126.0
+offset_top = 326.0
+offset_right = 580.0
+offset_bottom = 476.0
+texture_normal = ExtResource("4_save")

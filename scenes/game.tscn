@@ -43,8 +43,8 @@
 [ext_resource type="Texture2D" uid="uid://bngc4rqr5irna" path="res://resources/decline_button.png" id="38_nepv3"]
 [ext_resource type="Texture2D" uid="uid://bfcxwybswp2ws" path="res://scenes/gemini-2.5-flash-image_сделай_в_том_же_стиле_пригласительное_письм-0.jpg" id="41_pr1ej"]
 [ext_resource type="Texture2D" uid="uid://curyk8m6enp3j" path="res://resources/yes_button.png" id="42_05nbr"]
-[ext_resource type="Texture2D" uid="uid://dvm84svwuka3x" path="res://resources/640x244_green_button_base.png" id="51_green"]
-[ext_resource type="PackedScene" uid="uid://pause_menu" path="res://scenes/pause_menu.tscn" id="52_pause"]
+[ext_resource type="PackedScene" uid="uid://moupsie2oa5a" path="res://scenes/pause_menu.tscn" id="52_pause"]
+[ext_resource type="Texture2D" uid="uid://ca2c5physdp6g" path="res://resources/pause_button.png" id="60_pause"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kvpfn"]
 
@@ -490,27 +490,21 @@ horizontal_alignment = 1
 
 [node name="ExpGainSound" type="AudioStreamPlayer" parent="." unique_id=1666004905]
 stream = ExtResource("13_kvuet")
-bus = &"SFX"
 
 [node name="ButtonClickSound" type="AudioStreamPlayer" parent="." unique_id=1706387986]
 stream = ExtResource("14_trtic")
-bus = &"SFX"
 
 [node name="FallingItem" type="AudioStreamPlayer" parent="." unique_id=2078575799]
 stream = ExtResource("16_ssvqc")
-bus = &"SFX"
 
 [node name="NewCustomerSound" type="AudioStreamPlayer" parent="." unique_id=995923193]
 stream = ExtResource("34_02fa5")
-bus = &"SFX"
 
 [node name="CustomerLeavingSound" type="AudioStreamPlayer" parent="." unique_id=365195284]
 stream = ExtResource("35_nepv3")
-bus = &"SFX"
 
 [node name="ThumbBoltSound" type="AudioStreamPlayer" parent="." unique_id=555122539]
 stream = ExtResource("37_m4url")
-bus = &"SFX"
 volume_db = 14.597
 pitch_scale = 1.21
 
@@ -549,27 +543,16 @@ text = "Выход"
 
 [node name="PauseButton" type="TextureButton" parent="." unique_id=5001]
 layout_mode = 0
-offset_left = 900.0
-offset_top = 10.0
-offset_right = 1020.0
-offset_bottom = 80.0
-texture_normal = ExtResource("51_green")
+offset_left = 21.0
+offset_top = 16.0
+offset_right = 151.0
+offset_bottom = 138.0
+texture_normal = ExtResource("60_pause")
 ignore_texture_size = true
-stretch_mode = 2
 
-[node name="PauseLabel" type="Label" parent="PauseButton" unique_id=5002]
+[node name="PauseMenu" parent="." unique_id=1174899408 instance=ExtResource("52_pause")]
+visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 34
-text = "⏸"
-
-[node name="PauseMenu" parent="." instance=ExtResource("52_pause")]
 
 [node name="RotateButton" type="TextureButton" parent="." unique_id=1137887145]
 visible = false
