@@ -27,6 +27,8 @@ var pending_url: String = ""
 
 
 func _ready():
+	SoundManager.stop_music()  # в главном меню музыки нет
+	
 	# Исключаем крупные кнопки меню из MobileSizer (они и так большие)
 	play_button.set_meta("mobile_exclude", true)
 	settings_button.set_meta("mobile_exclude", true)

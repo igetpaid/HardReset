@@ -232,6 +232,8 @@ func _go_to_lose():
 
 func _go_to_win():
 	print("Переход на сцену победы")
+	SoundManager.stop_music()
+	SoundManager.play_music("res://audio/music/main_music.mp3")
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	get_tree().change_scene_to_file("res://scenes/win.tscn")
 
