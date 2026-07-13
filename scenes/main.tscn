@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://dl63me4jis1m5" path="res://resources/github_logo.png" id="8_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://54yl81ijuht7" path="res://resources/vk_logo.png" id="9_s3ugp"]
 [ext_resource type="Texture2D" uid="uid://curyk8m6enp3j" path="res://resources/yes_button.png" id="10_9m7x0"]
-[ext_resource type="FontFile" uid="uid://deekk24grivc1" path="res://fonts/minecraft.ttf" id="10_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://dgl8uo0cn1wh5" path="res://resources/no_button.png" id="11_av3fd"]
 [ext_resource type="Theme" uid="uid://dov4gmc44fjd2" path="res://resources/themes/main_theme.tres" id="12_theme"]
 [ext_resource type="Texture2D" uid="uid://cwwnx3fjtm35s" path="res://resources/back_button_blue_150px.png" id="14_back"]
@@ -81,10 +80,10 @@ offset_left = 768.0
 offset_top = 712.0
 offset_right = 1118.0
 offset_bottom = 820.0
+pivot_offset = Vector2(175, 59)
+toggle_mode = true
 texture_normal = ExtResource("16_large")
 ignore_texture_size = true
-stretch_mode = 2
-toggle_mode = true
 
 [node name="VolumeControls" parent="SettingsGroup" unique_id=263950954 instance=ExtResource("15_vol")]
 layout_mode = 0
@@ -149,7 +148,6 @@ theme_override_font_sizes/font_size = 30
 text = "Загрузить сохранение?"
 
 [node name="LinkDialog" type="Panel" parent="." unique_id=199132776]
-visible = false
 layout_mode = 0
 offset_left = 610.0
 offset_top = 330.0
@@ -175,21 +173,23 @@ theme_override_font_sizes/font_size = 18
 text = "https://..."
 autowrap_mode = 2
 
-[node name="OpenButton" type="Button" parent="LinkDialog" unique_id=817489188]
+[node name="OpenButton" type="TextureButton" parent="LinkDialog" unique_id=604321153]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 130.0
-offset_right = 270.0
-offset_bottom = 190.0
-text = "Открыть"
+offset_left = 174.0
+offset_top = 134.0
+offset_right = 387.00012
+offset_bottom = 346.00012
+scale = Vector2(0.47, 0.47)
+texture_normal = ExtResource("10_9m7x0")
 
-[node name="CancelButton" type="Button" parent="LinkDialog" unique_id=2124390534]
+[node name="CancelButton" type="TextureButton" parent="LinkDialog" unique_id=715004608]
 layout_mode = 0
-offset_left = 330.0
-offset_top = 130.0
-offset_right = 500.0
-offset_bottom = 190.0
-text = "Отмена"
+offset_left = 422.0
+offset_top = 134.0
+offset_right = 634.0001
+offset_bottom = 346.00012
+scale = Vector2(0.47, 0.47)
+texture_normal = ExtResource("11_av3fd")
 
 [connection signal="pressed" from="MenuGroup/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="MenuGroup/SettingsButton" to="." method="_on_settings_pressed"]

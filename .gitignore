@@ -12,6 +12,7 @@ addons/
 .release/
 Local_Test/
 android/
+build/
 
 # OS
 Thumbs.db

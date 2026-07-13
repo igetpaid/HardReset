@@ -1,128 +1,134 @@
-name: Build & Release
+# ============================================================
+# DISABLED — Local build is now primary (build.bat + release.bat)
+# To re-enable: uncomment everything below
+# Last used: before v1.1.5 (moved to local build pipeline)
+# ============================================================
 
-on:
-  push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
-    inputs:
-      debug:
-        description: 'Verbose export logging'
-        type: boolean
-        default: false
-
-env:
-  EXPORT_NAME: hardreset
-  GODOT_VERSION: "4.7"
-
-jobs:
-  export-windows:
-    name: Export Windows
-    runs-on: windows-latest
-    permissions:
-      contents: write
-    defaults:
-      run:
-        shell: powershell
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      # === Cache Godot binary (50 MB) ===
-      - name: Cache Godot
-        id: cache-godot
-        uses: actions/cache@v4
-        with:
-          path: godot_cache/
-          key: godot-${{ env.GODOT_VERSION }}-${{ runner.os }}
-
-      - name: Download Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_win64.exe.zip"
-          Write-Output "Downloading Godot ($url)..."
-          Invoke-WebRequest -Uri $url -OutFile "godot.zip"
-          New-Item -ItemType Directory -Path "godot_cache" -Force | Out-Null
-          Expand-Archive -Path "godot.zip" -DestinationPath "godot_cache" -Force
-          Remove-Item "godot.zip"
-
-      - name: Find Godot
-        run: |
-          # Prefer console version (better for CI), fallback to normal
-          $bin = Get-ChildItem -Path "godot_cache" -Filter "*console*.exe" | Select-Object -First 1
-          if (-not $bin) { $bin = Get-ChildItem -Path "godot_cache" -Filter "*.exe" | Select-Object -First 1 }
-          "GODOT_BIN=$($bin.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
-          Write-Output "Using Godot: $($bin.Name)"
-
-      # === Cache Export Templates (400 MB) ===
-      - name: Cache Templates
-        id: cache-templates
-        uses: actions/cache@v4
-        with:
-          path: |
-            $env:APPDATA\Godot\export_templates\
-          key: godot-templates-${{ env.GODOT_VERSION }}-${{ hashFiles('export_presets.cfg') }}
-
-      - name: Download Templates
-        if: steps.cache-templates.outputs.cache-hit != 'true'
-        run: |
-          $ver = "$env:GODOT_VERSION.stable"
-          $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_export_templates.tpz"
-          $templateDir = "$env:APPDATA\Godot\export_templates\$ver"
-          Write-Output "Downloading Export Templates..."
-          New-Item -ItemType Directory -Path $templateDir -Force | Out-Null
-          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\templates.tpz"
-          Add-Type -AssemblyName System.IO.Compression.FileSystem
-          [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:TEMP\templates.tpz", "$env:TEMP\extracted_templates")
-          Copy-Item -Path "$env:TEMP\extracted_templates\templates\*" -Destination $templateDir -Recurse -Force
-          Remove-Item "$env:TEMP\templates.tpz" -Force
-          Remove-Item "$env:TEMP\extracted_templates" -Recurse -Force
-          Write-Output "Templates installed to $templateDir"
-
-      # === Cache .godot/ import cache ===
-      - name: Cache Import Cache
-        id: cache-import
-        uses: actions/cache@v4
-        with:
-          path: .godot/
-          key: godot-import-${{ hashFiles('**/*.import', 'project.godot', 'export_presets.cfg') }}
-          restore-keys: |
-            godot-import-
-
-      # === Export ===
-      - name: Export Windows Desktop
-        run: |
-          $verbose = "${{ inputs.debug }}" -eq "true"
-          $flags = @("--headless")
-          if ($verbose) { $flags += "--verbose" }
-          New-Item -ItemType Directory -Path "build" -Force | Out-Null
-          Write-Output "Exporting with: $env:GODOT_BIN $($flags -join ' ')"
-          & "$env:GODOT_BIN" @flags --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe" 2>&1
-          $exit = $LASTEXITCODE
-          if ($exit -ne 0) {
-            Write-Output "--- First attempt failed (code $exit). Retrying without --headless ---"
-            & "$env:GODOT_BIN" --verbose --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe" 2>&1
-            if ($LASTEXITCODE -ne 0) {
-              throw "Export failed after retry"
-            }
-          }
-          $file = Get-Item "build\$env:EXPORT_NAME.exe"
-          Write-Output "SUCCESS: $($file.FullName) ($([math]::Round($file.Length/1MB, 2)) MB)"
-
-      - name: Verify Build
-        run: |
-          $file = "build\$env:EXPORT_NAME.exe"
-          if (-not (Test-Path $file)) { throw "Build output not found!" }
-          $size = (Get-Item $file).Length
-          Write-Output "Build verified: $file, $([math]::Round($size/1MB, 2)) MB"
-          if ($size -lt 1MB) { throw "Build too small (< 1 MB), something went wrong" }
-
-      # === Release ===
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: build/**
-          generate_release_notes: true
-          name: Hard Reset ${{ github.ref_name }}
+# name: Build & Release
+#
+# on:
+#   push:
+#     tags:
+#       - 'v*'
+#   workflow_dispatch:
+#     inputs:
+#       debug:
+#         description: 'Verbose export logging'
+#         type: boolean
+#         default: false
+#
+# env:
+#   EXPORT_NAME: hardreset
+#   GODOT_VERSION: "4.7"
+#
+# jobs:
+#   export-windows:
+#     name: Export Windows
+#     runs-on: windows-latest
+#     permissions:
+#       contents: write
+#     defaults:
+#       run:
+#         shell: powershell
+#
+#     steps:
+#       - uses: actions/checkout@v4
+#         with:
+#           lfs: true
+#
+#       # === Cache Godot binary (50 MB) ===
+#       - name: Cache Godot
+#         id: cache-godot
+#         uses: actions/cache@v4
+#         with:
+#           path: godot_cache/
+#           key: godot-${{ env.GODOT_VERSION }}-${{ runner.os }}
+#
+#       - name: Download Godot
+#         if: steps.cache-godot.outputs.cache-hit != 'true'
+#         run: |
+#           $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_win64.exe.zip"
+#           Write-Output "Downloading Godot ($url)..."
+#           Invoke-WebRequest -Uri $url -OutFile "godot.zip"
+#           New-Item -ItemType Directory -Path "godot_cache" -Force | Out-Null
+#           Expand-Archive -Path "godot.zip" -DestinationPath "godot_cache" -Force
+#           Remove-Item "godot.zip"
+#
+#       - name: Find Godot
+#         run: |
+#           # Prefer console version (better for CI), fallback to normal
+#           $bin = Get-ChildItem -Path "godot_cache" -Filter "*console*.exe" | Select-Object -First 1
+#           if (-not $bin) { $bin = Get-ChildItem -Path "godot_cache" -Filter "*.exe" | Select-Object -First 1 }
+#           "GODOT_BIN=$($bin.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
+#           Write-Output "Using Godot: $($bin.Name)"
+#
+#       # === Cache Export Templates (400 MB) ===
+#       - name: Cache Templates
+#         id: cache-templates
+#         uses: actions/cache@v4
+#         with:
+#           path: |
+#             $env:APPDATA\Godot\export_templates\
+#           key: godot-templates-${{ env.GODOT_VERSION }}-${{ hashFiles('export_presets.cfg') }}
+#
+#       - name: Download Templates
+#         if: steps.cache-templates.outputs.cache-hit != 'true'
+#         run: |
+#           $ver = "$env:GODOT_VERSION.stable"
+#           $url = "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION-stable/Godot_v$env:GODOT_VERSION-stable_export_templates.tpz"
+#           $templateDir = "$env:APPDATA\Godot\export_templates\$ver"
+#           Write-Output "Downloading Export Templates..."
+#           New-Item -ItemType Directory -Path $templateDir -Force | Out-Null
+#           Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\templates.tpz"
+#           Add-Type -AssemblyName System.IO.Compression.FileSystem
+#           [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:TEMP\templates.tpz", "$env:TEMP\extracted_templates")
+#           Copy-Item -Path "$env:TEMP\extracted_templates\templates\*" -Destination $templateDir -Recurse -Force
+#           Remove-Item "$env:TEMP\templates.tpz" -Force
+#           Remove-Item "$env:TEMP\extracted_templates" -Recurse -Force
+#           Write-Output "Templates installed to $templateDir"
+#
+#       # === Cache .godot/ import cache ===
+#       - name: Cache Import Cache
+#         id: cache-import
+#         uses: actions/cache@v4
+#         with:
+#           path: .godot/
+#           key: godot-import-${{ hashFiles('**/*.import', 'project.godot', 'export_presets.cfg') }}
+#           restore-keys: |
+#             godot-import-
+#
+#       # === Export ===
+#       - name: Export Windows Desktop
+#         run: |
+#           $verbose = "${{ inputs.debug }}" -eq "true"
+#           $flags = @("--headless")
+#           if ($verbose) { $flags += "--verbose" }
+#           New-Item -ItemType Directory -Path "build" -Force | Out-Null
+#           Write-Output "Exporting with: $env:GODOT_BIN $($flags -join ' ')"
+#           & "$env:GODOT_BIN" @flags --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe" 2>&1
+#           $exit = $LASTEXITCODE
+#           if ($exit -ne 0) {
+#             Write-Output "--- First attempt failed (code $exit). Retrying without --headless ---"
+#             & "$env:GODOT_BIN" --verbose --export-release "Windows Desktop" "build\$env:EXPORT_NAME.exe" 2>&1
+#             if ($LASTEXITCODE -ne 0) {
+#               throw "Export failed after retry"
+#             }
+#           }
+#           $file = Get-Item "build\$env:EXPORT_NAME.exe"
+#           Write-Output "SUCCESS: $($file.FullName) ($([math]::Round($file.Length/1MB, 2)) MB)"
+#
+#       - name: Verify Build
+#         run: |
+#           $file = "build\$env:EXPORT_NAME.exe"
+#           if (-not (Test-Path $file)) { throw "Build output not found!" }
+#           $size = (Get-Item $file).Length
+#           Write-Output "Build verified: $file, $([math]::Round($size/1MB, 2)) MB"
+#           if ($size -lt 1MB) { throw "Build too small (< 1 MB), something went wrong" }
+#
+#       # === Release ===
+#       - name: Create GitHub Release
+#         uses: softprops/action-gh-release@v2
+#         with:
+#           files: build/**
+#           generate_release_notes: true
+#           name: Hard Reset ${{ github.ref_name }}
