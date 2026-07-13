@@ -131,6 +131,16 @@ func _ready():
 		front_panel_glow.add_theme_stylebox_override("panel", style)
 	
 	MobileSizer.enlarge_scene(self)
+	
+	# Все звуковые эффекты → на шину SFX (чтобы слайдер "Громкость звуков" работал)
+	SoundManager.assign_to_sfx($NewCustomerSound)
+	SoundManager.assign_to_sfx($ButtonClickSound)
+	SoundManager.assign_to_sfx($ExpGainSound)
+	SoundManager.assign_to_sfx($FallingItem)
+	SoundManager.assign_to_sfx($CustomerLeavingSound)
+	SoundManager.assign_to_sfx(thumb_bolt_sound)
+	SoundManager.assign_to_sfx($AirblowerSound)
+	
 	MinigameManager.load_progress()
 	last_money_amount = MinigameManager.player_money
 	
@@ -160,6 +170,7 @@ func _ready():
 	
 	# Подключаем сигналы мини-игр
 	dusty_minigame.play_click_sound.connect(_play_dusty_click_sound)
+	dusty_minigame.play_airblower_sound.connect(_play_airblower_sound)
 	dusty_minigame.toggle_case_visibility.connect(_on_dusty_case_visibility)
 	
 	_on_exp_changed(MinigameManager.current_exp, MinigameManager.current_level, MinigameManager.exp_to_next_level)
@@ -540,10 +551,12 @@ func _hide_front_panel_glow():
 
 func _on_broken_fan_pressed(button: TextureButton):
 	print("Запуск мини-игры для сломанного кулера")
+	pause_button.visible = false  # кнопка паузы не работает во время мини-игры
 	MinigameManager.current_fan_button = button
 	MinigameManager.start_minigame("broken_fan")
 
 func _on_minigame_completed(minigame_id: String, success: bool, completion_time: float):
+	pause_button.visible = true  # возвращаем кнопку паузы
 	print("_on_minigame_completed: ", minigame_id, " success: ", success)
 	print("active_problems до обработки: ", active_problems)
 	
@@ -678,6 +691,7 @@ func _on_dusty_pressed():
 	
 	if dusty_button in active_problems:
 		print("Запуск мини-игры DustyPC")
+		pause_button.visible = false  # кнопка паузы не работает во время мини-игры
 		$MinigameDustyPC.start()
 	else:
 		print("Пыль не в списке активных проблем!")
@@ -908,6 +922,9 @@ func show_money_popup(amount: int, is_gain: bool = true):
 # Обработчики сигналов от dusty_minigame
 func _play_dusty_click_sound():
 	$ButtonClickSound.play()
+
+func _play_airblower_sound():
+	$AirblowerSound.play()
 
 func _on_dusty_case_visibility(visible: bool):
 	$ComputerView/SideView/SideGamingCase.visible = visible

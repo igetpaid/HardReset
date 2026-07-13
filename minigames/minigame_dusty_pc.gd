@@ -2,6 +2,7 @@ extends Control
 
 signal completed(success: bool, completion_time: float)
 signal play_click_sound()
+signal play_airblower_sound()
 signal toggle_case_visibility(visible: bool)
 
 const CASE_RECT = Rect2(550, 160, 770, 760)
@@ -64,6 +65,9 @@ func _on_airblower_selected():
 		cleaning_mode = false
 		animate_button_out(duster_button)
 		animate_button_out(airblower_button)
+		
+		# Звук баллончика
+		play_airblower_sound.emit()
 		
 		# Анимация баллончика
 		airblower_animation.visible = true

@@ -60,7 +60,9 @@ ignore_texture_size = true
 [node name="SaveExitButton" type="TextureButton" parent="Panel" unique_id=11]
 layout_mode = 0
 offset_left = 126.0
-offset_top = 326.0
+offset_top = 390.0
 offset_right = 580.0
 offset_bottom = 476.0
 texture_normal = ExtResource("4_save")
+ignore_texture_size = true
+stretch_mode = 5

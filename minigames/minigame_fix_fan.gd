@@ -64,6 +64,12 @@ func _ready():
 	# 4. MobileSizer — адаптация под мобильные устройства (увеличивает мелкие BaseButton)
 	MobileSizer.enlarge_scene(self)
 	
+	# Все звуковые эффекты → на шину SFX (чтобы слайдер "Громкость звуков" работал)
+	SoundManager.assign_to_sfx($ScrewdriverSound)
+	SoundManager.assign_to_sfx($TrashSound)
+	SoundManager.assign_to_sfx($ConveyorSound)
+	SoundManager.assign_to_sfx($ButtonClickSound)
+	
 	# 5. Явное увеличение GlowRing'ов на мобильных (TextureRect — MobileSizer их не трогает)
 	if OS.get_name() == "Android" or MobileSizer.force_enabled:
 		var glow_factor := 1.5

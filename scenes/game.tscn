@@ -41,6 +41,7 @@
 [ext_resource type="AudioStream" uid="uid://da57ipre4udh0" path="res://audio/sfx/steps_sound.mp3" id="35_nepv3"]
 [ext_resource type="AudioStream" uid="uid://bcylk61nag0wy" path="res://audio/sfx/thumb_bolt_unscreawed.mp3" id="37_m4url"]
 [ext_resource type="Texture2D" uid="uid://bngc4rqr5irna" path="res://resources/decline_button.png" id="38_nepv3"]
+[ext_resource type="AudioStream" uid="uid://c1ptab21r5713" path="res://audio/sfx/vacuum_cleaner.mp3" id="39_458eo"]
 [ext_resource type="Texture2D" uid="uid://bfcxwybswp2ws" path="res://scenes/gemini-2.5-flash-image_сделай_в_том_же_стиле_пригласительное_письм-0.jpg" id="41_pr1ej"]
 [ext_resource type="Texture2D" uid="uid://curyk8m6enp3j" path="res://resources/yes_button.png" id="42_05nbr"]
 [ext_resource type="PackedScene" uid="uid://moupsie2oa5a" path="res://scenes/pause_menu.tscn" id="52_pause"]
@@ -509,6 +510,9 @@ stream = ExtResource("35_nepv3")
 stream = ExtResource("37_m4url")
 volume_db = 14.597
 pitch_scale = 1.21
+
+[node name="AirblowerSound" type="AudioStreamPlayer" parent="." unique_id=485038966]
+stream = ExtResource("39_458eo")
 
 [node name="MoneyIcon" type="TextureRect" parent="." unique_id=1418189379]
 layout_mode = 0
