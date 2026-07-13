@@ -26,6 +26,9 @@ build/
 *.bat
 *.py
 
+# Fonts
+fonts/
+
 # CI/CD config
 .github/
 
