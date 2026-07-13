@@ -1,18 +1,33 @@
 # Godot
 .godot/
 export_credentials.cfg
+export_presets.cfg
 *.translation
 *.backup
+*.import
+*.uid
+
+# Addons (personal)
 addons/
 
-# Личные файлы проекта (идеи, планы, заметки)
+# Personal project files
 .opencode/
 
-# Сборки
+# Builds and artifacts
 .release/
 Local_Test/
 android/
 build/
+*.exe
+*.apk
+*.pck
+
+# Build scripts (local only)
+*.bat
+*.py
+
+# CI/CD config
+.github/
 
 # OS
 Thumbs.db
